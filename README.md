@@ -1,2 +1,2 @@
 # P-OceanPulse
-P-OceanPulse is an interactive educational platform developed by CyberWorld-Tech that brings NASA's cutting-edge ocean data to life through immersive exploration, engaging gameplay, and compelling storytelling. We transform complex satellite data into an accessible adventure that inspires ocean conservation and scientific curiosity.
+P-OceanPulse is an interactive educational platform developed by CyberWorld-Tech that brings NASA's cutting-edge ocean data to life through immersive exploration, engaging gameplay, and compelling storytelling. We transform complex satellite data into an accessible adventure that inspires ocean conservation and scientific curiosity.Become a gaudian of the blueprint here https://pride0785.github.io/P-OceanPulse/
