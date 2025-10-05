@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Guardian: NASA Marine Mission</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a2472, #0d6efd, #00c9ff);
+            color: white;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .ocean-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" opacity="0.1"><path d="M0,320L48,293.3C96,267,192,213,288,186.7C384,160,480,160,576,176C672,192,768,224,864,224C960,224,1056,192,1152,165.3C1248,139,1344,117,1392,106.7L1440,96L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z" fill="%2300c9ff"/></svg>') no-repeat bottom;
+            z-index: -1;
+            opacity: 0.3;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(to right, #7fdbff, #39cccc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleGlow 3s infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 10px rgba(127, 219, 255, 0.5); }
+            100% { text-shadow: 0 0 20px rgba(127, 219, 255, 0.8), 0 0 30px rgba(57, 204, 204, 0.6); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .ocean-map {
+            background: rgba(5, 25, 55, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            height: 550px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(127, 219, 255, 0.3);
+        }
+
+        .mission-control {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(127, 219, 255, 0.2);
+        }
+
+        .mission-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #7fdbff;
+            text-shadow: 0 0 10px rgba(127, 219, 255, 0.5);
+        }
+
+        .mission-data {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            min-height: 150px;
+            border-left: 4px solid #7fdbff;
+        }
+
+        .nasa-badge {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+
+        .nasa-badge:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(127, 219, 255, 0.3);
+        }
+
+        .badge-icon {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #1a2980;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .badge-info {
+            flex: 1;
+        }
+
+        .badge-title {
+            font-weight: bold;
+            font-size: 0.95rem;
+        }
+
+        .badge-desc {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            border: none;
+            border-radius: 10px;
+            padding: 14px 28px;
+            color: white;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            background: linear-gradient(135deg, #2980b9, #3498db);
+        }
+
+        button:disabled {
+            background: #7f8c8d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .marine-element {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            font-size: 2.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            animation: float 3s infinite ease-in-out;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .marine-element:hover {
+            transform: scale(1.15);
+            z-index: 20;
+        }
+
+        .element-label {
+            font-size: 0.7rem;
+            margin-top: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2px 8px;
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .marine-element:hover .element-label {
+            opacity: 1;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .coral-reef {
+            background: linear-gradient(135deg, #ff6b6b, #ff8e8e);
+            bottom: 120px;
+            left: 180px;
+            animation-delay: 0s;
+        }
+
+        .whale-pod {
+            background: linear-gradient(135deg, #48dbfb, #74b9ff);
+            top: 140px;
+            right: 220px;
+            animation-delay: 0.5s;
+        }
+
+        .plastic-pollution {
+            background: linear-gradient(135deg, #c8c8c8, #e0e0e0);
+            top: 240px;
+            left: 350px;
+            animation-delay: 1s;
+        }
+
+        .phytoplankton {
+            background: linear-gradient(135deg, #55efc4, #81ecec);
+            bottom: 220px;
+            right: 140px;
+            animation-delay: 1.5s;
+        }
+
+        .ocean-current {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            top: 350px;
+            left: 140px;
+            animation-delay: 2s;
+        }
+
+        .game-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(127, 219, 255, 0.2);
+        }
+
+        .stat {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+        }
+
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #7fdbff;
+            text-shadow: 0 0 10px rgba(127, 219, 255, 0.5);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .completion-screen {
+            text-align: center;
+            padding: 40px;
+            display: none;
+            background: rgba(0, 0, 0, 0.7);
+            border-radius: 20px;
+            margin-top: 20px;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .badges-earned {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+
+        .earned-badge {
+            background: rgba(255, 215, 0, 0.2);
+            border: 2px solid gold;
+            border-radius: 15px;
+            padding: 20px;
+            width: 180px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .earned-badge:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .action-btn {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            padding: 12px 20px;
+            font-size: 1rem;
+            margin: 5px;
+            border-radius: 8px;
+        }
+
+        .action-btn:hover {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(127, 219, 255, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(127, 219, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(127, 219, 255, 0); }
+        }
+
+        .satellite {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            font-size: 2rem;
+            animation: orbit 20s linear infinite;
+            z-index: 5;
+        }
+
+        @keyframes orbit {
+            from { transform: rotate(0deg) translateX(150px) rotate(0deg); }
+            to { transform: rotate(360deg) translateX(150px) rotate(-360deg); }
+        }
+
+        .bubbles {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -50px;
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            animation: rise 10s infinite ease-in;
+        }
+
+        .bubble:nth-child(1) { left: 10%; animation-delay: 0s; }
+        .bubble:nth-child(2) { left: 20%; animation-delay: 1s; width: 15px; height: 15px; }
+        .bubble:nth-child(3) { left: 30%; animation-delay: 2s; width: 25px; height: 25px; }
+        .bubble:nth-child(4) { left: 40%; animation-delay: 3s; width: 10px; height: 10px; }
+        .bubble:nth-child(5) { left: 50%; animation-delay: 4s; }
+        .bubble:nth-child(6) { left: 60%; animation-delay: 5s; width: 18px; height: 18px; }
+        .bubble:nth-child(7) { left: 70%; animation-delay: 6s; width: 12px; height: 12px; }
+        .bubble:nth-child(8) { left: 80%; animation-delay: 7s; width: 22px; height: 22px; }
+        .bubble:nth-child(9) { left: 90%; animation-delay: 8s; width: 16px; height: 16px; }
+
+        @keyframes rise {
+            0% { bottom: -50px; transform: translateX(0); opacity: 0; }
+            10% { opacity: 0.7; }
+            90% { opacity: 0.5; }
+            100% { bottom: 100%; transform: translateX(20px); opacity: 0; }
+        }
+
+        @media (max-width: 968px) {
+            .game-area {
+                grid-template-columns: 1fr;
+            }
+            
+            .ocean-map {
+                height: 400px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--accent), #4fc3f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nasa-badge {
+            background: var(--nasa-blue);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="ocean-bg"></div>
+        <div class="satellite">🛰️</div>
+        
+        <header>
+            <h1><i class="fas fa-water"></i> Ocean Guardian</h1>
+            <p class="subtitle">NASA Marine Conservation Mission</p>
+            <p>Use NASA satellite data to protect marine ecosystems and earn prestigious NASA badges</p>
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <h1>Ocean Pulse <span class="nasa-badge">NASA DATA</span></h1>
+            </div>
+            <nav class="nav-links">
+                <a href="nasaspace.html" >Dashboard</a>
+                <a href="oceangame.html" class="active">Ocean Game</a>
+                <a href="quiz.html">Ocean Quiz</a>
+                <a href="nasaspace.html">Ocean Stories</a>
+                <a href="nasaspace.html">NASA Data</a>
+            </nav>
+        
+        </header>
+
+        <div class="game-stats">
+            <div class="stat">
+                <div class="stat-value" id="score">0</div>
+                <div class="stat-label">Mission Score</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="health">100%</div>
+                <div class="stat-label">Ocean Health</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="badges">0</div>
+                <div class="stat-label">NASA Badges</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="threats">5</div>
+                <div class="stat-label">Threats Remaining</div>
+            </div>
+        </div>
+
+        <div class="game-area">
+            <div class="ocean-map" id="ocean-map">
+                <div class="bubbles">
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                    <div class="bubble"></div>
+                </div>
+                
+                <div class="marine-element coral-reef pulse" data-target="coral">
+                    🪸
+                    <div class="element-label">Coral Reef</div>
+                </div>
+                <div class="marine-element whale-pod pulse" data-target="whale">
+                    🐋
+                    <div class="element-label">Whale Pod</div>
+                </div>
+                <div class="marine-element plastic-pollution pulse" data-target="plastic">
+                    🫙
+                    <div class="element-label">Plastic Pollution</div>
+                </div>
+                <div class="marine-element phytoplankton pulse" data-target="phytoplankton">
+                    🦠
+                    <div class="element-label">Phytoplankton</div>
+                </div>
+                <div class="marine-element ocean-current pulse" data-target="current">
+                    🌊
+                    <div class="element-label">Ocean Current</div>
+                </div>
+            </div>
+
+            <div class="mission-control">
+                <div class="mission-title"><i class="fas fa-satellite"></i> NASA Mission Control</div>
+                <div class="mission-data" id="mission-data">
+                    <p>Welcome, Ocean Guardian! Your mission is to protect marine ecosystems using NASA satellite data.</p>
+                    <p>Click on any marine element to analyze threats and take protective actions.</p>
+                    <p style="margin-top: 15px; color: #7fdbff;"><i class="fas fa-info-circle"></i> Each successful action improves ocean health and earns you points.</p>
+                </div>
+                
+                <div id="actions-container">
+                    <!-- Actions will be populated by JavaScript -->
+                </div>
+                
+                <div class="mission-title"><i class="fas fa-award"></i> NASA Badges</div>
+                <div id="badges-container">
+                    <div class="nasa-badge">
+                        <div class="badge-icon">🌍</div>
+                        <div class="badge-info">
+                            <div class="badge-title">Earth Observer</div>
+                            <div class="badge-desc">Use NASA satellite data in 5 scenarios</div>
+                        </div>
+                    </div>
+                    <div class="nasa-badge">
+                        <div class="badge-icon">🛰️</div>
+                        <div class="badge-info">
+                            <div class="badge-title">Ocean Guardian</div>
+                            <div class="badge-desc">Protect all 5 marine elements</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button id="restart-btn"><i class="fas fa-redo"></i> New Mission</button>
+            <button id="complete-btn" disabled><i class="fas fa-flag-checkered"></i> Complete Mission</button>
+        </div>
+    </div>
+
+    <div class="container completion-screen" id="completion-screen">
+        <h2 style="font-size: 2.5rem; margin-bottom: 20px;">Mission Complete! <i class="fas fa-trophy"></i></h2>
+        <p style="font-size: 1.2rem; margin-bottom: 30px;">You've successfully protected marine ecosystems using NASA satellite data.</p>
+        
+        <div class="game-stats">
+            <div class="stat">
+                <div class="stat-value" id="final-score">0</div>
+                <div class="stat-label">Final Score</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="final-health">100%</div>
+                <div class="stat-label">Ocean Health</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="final-badges">0</div>
+                <div class="stat-label">NASA Badges</div>
+            </div>
+        </div>
+        
+        <h3 style="font-size: 1.8rem; margin: 30px 0 20px; color: #7fdbff;">NASA Badges Earned <i class="fas fa-award"></i></h3>
+        <div class="badges-earned" id="badges-earned">
+            <!-- Earned badges will be displayed here -->
+        </div>
+        
+        <button id="new-mission-btn" style="margin-top: 30px;"><i class="fas fa-rocket"></i> Start New Mission</button>
+    </div>
+
+    <script>
+        // Game state
+        const gameState = {
+            score: 0,
+            oceanHealth: 100,
+            badgesEarned: [],
+            currentTarget: null,
+            actionsTaken: {},
+            threatsRemaining: 5,
+            missionComplete: false
+        };
+
+        // NASA badges data
+        const nasaBadges = [
+            { id: 'earth-observer', title: 'Earth Observer', description: 'Used NASA satellite data in 5 different scenarios', icon: '🌍', earned: false },
+            { id: 'ocean-guardian', title: 'Ocean Guardian', description: 'Protected all 5 marine elements', icon: '🛰️', earned: false },
+            { id: 'climate-hero', title: 'Climate Hero', description: 'Maintained ocean health above 80%', icon: '🔥', earned: false },
+            { id: 'data-scientist', title: 'Data Scientist', description: 'Analyzed all NASA data types', icon: '📊', earned: false },
+            { id: 'marine-biologist', title: 'Marine Biologist', description: 'Successfully protected coral reefs and whale pods', icon: '🔬', earned: false },
+            { id: 'deep-sea-explorer', title: 'Deep Sea Explorer', description: 'Completed mission with maximum score', icon: '🌊', earned: false }
+        ];
+
+        // Marine elements data
+        const marineElements = {
+            coral: {
+                name: 'Coral Reef',
+                description: 'Coral reefs are suffering from bleaching due to rising ocean temperatures. NASA satellites monitor sea surface temperatures to predict bleaching events.',
+                data: 'NASA Sea Surface Temperature Data',
+                threats: ['Temperature Stress', 'Ocean Acidification', 'Pollution'],
+                actions: [
+                    { name: 'Monitor Temperature', description: 'Use NASA SST data to identify heat stress areas', points: 20, healthImpact: 5, icon: '🌡️' },
+                    { name: 'Create Protected Zone', description: 'Establish marine protected area based on NASA data', points: 30, healthImpact: 10, icon: '🛡️' },
+                    { name: 'Reduce Local Stressors', description: 'Use NASA data to guide coastal management', points: 25, healthImpact: 8, icon: '🏭' }
+                ]
+            },
+            whale: {
+                name: 'Whale Pod',
+                description: 'Whales are affected by ship strikes and noise pollution. NASA satellites track ship traffic and ocean conditions.',
+                data: 'NASA AIS Ship Tracking & Ocean Current Data',
+                threats: ['Ship Strikes', 'Noise Pollution', 'Entanglement'],
+                actions: [
+                    { name: 'Reroute Shipping', description: 'Use NASA data to create whale-safe shipping lanes', points: 25, healthImpact: 7, icon: '🚢' },
+                    { name: 'Monitor Populations', description: 'Track whale migrations with satellite imagery', points: 20, healthImpact: 5, icon: '📡' },
+                    { name: 'Reduce Noise Pollution', description: 'Implement quiet zones based on NASA ocean acoustic data', points: 30, healthImpact: 8, icon: '🔇' }
+                ]
+            },
+            plastic: {
+                name: 'Plastic Pollution',
+                description: 'Plastic debris harms marine life and ecosystems. NASA uses satellite imagery to track ocean garbage patches.',
+                data: 'NASA Ocean Color & Floating Debris Detection',
+                threats: ['Marine Ingestion', 'Habitat Destruction', 'Toxins'],
+                actions: [
+                    { name: 'Track Debris', description: 'Use NASA data to monitor plastic accumulation zones', points: 20, healthImpact: 5, icon: '🗺️' },
+                    { name: 'Cleanup Initiative', description: 'Deploy cleanup systems to high-concentration areas', points: 35, healthImpact: 12, icon: '🧹' },
+                    { name: 'Source Reduction', description: 'Identify land-based sources using NASA watershed data', points: 25, healthImpact: 8, icon: '🌊' }
+                ]
+            },
+            phytoplankton: {
+                name: 'Phytoplankton Bloom',
+                description: 'Phytoplankton are crucial for ocean health but harmful blooms can occur. NASA monitors ocean color to track phytoplankton populations.',
+                data: 'NASA Ocean Color & Chlorophyll Data',
+                threats: ['Harmful Algal Blooms', 'Oxygen Depletion', 'Toxin Production'],
+                actions: [
+                    { name: 'Monitor Blooms', description: 'Use NASA ocean color data to track phytoplankton', points: 20, healthImpact: 5, icon: '🔍' },
+                    { name: 'Predict Harmful Blooms', description: 'Apply NASA models to forecast problematic blooms', points: 30, healthImpact: 8, icon: '📈' },
+                    { name: 'Nutrient Management', description: 'Use NASA data to guide agricultural runoff policies', points: 25, healthImpact: 7, icon: '🌾' }
+                ]
+            },
+            current: {
+                name: 'Ocean Current',
+                description: 'Changing ocean currents affect marine ecosystems and climate. NASA satellites measure sea surface height to monitor currents.',
+                data: 'NASA Sea Surface Height & Current Data',
+                threats: ['Ecosystem Disruption', 'Coastal Erosion', 'Climate Change'],
+                actions: [
+                    { name: 'Current Mapping', description: 'Use NASA data to create detailed current maps', points: 20, healthImpact: 5, icon: '🗺️' },
+                    { name: 'Climate Modeling', description: 'Incorporate NASA data into climate prediction models', points: 30, healthImpact: 8, icon: '🌪️' },
+                    { name: 'Ecosystem Protection', description: 'Use current data to protect vulnerable ecosystems', points: 25, healthImpact: 7, icon: '🐠' }
+                ]
+            }
+        };
+
+        // DOM elements
+        const oceanMap = document.getElementById('ocean-map');
+        const missionData = document.getElementById('mission-data');
+        const actionsContainer = document.getElementById('actions-container');
+        const scoreElement = document.getElementById('score');
+        const healthElement = document.getElementById('health');
+        const badgesElement = document.getElementById('badges');
+        const threatsElement = document.getElementById('threats');
+        const restartBtn = document.getElementById('restart-btn');
+        const completeBtn = document.getElementById('complete-btn');
+        const completionScreen = document.getElementById('completion-screen');
+        const finalScoreElement = document.getElementById('final-score');
+        const finalHealthElement = document.getElementById('final-health');
+        const finalBadgesElement = document.getElementById('final-badges');
+        const badgesEarnedContainer = document.getElementById('badges-earned');
+        const newMissionBtn = document.getElementById('new-mission-btn');
+
+        // Initialize game
+        function initGame() {
+            gameState.score = 0;
+            gameState.oceanHealth = 100;
+            gameState.badgesEarned = [];
+            gameState.currentTarget = null;
+            gameState.actionsTaken = {};
+            gameState.threatsRemaining = 5;
+            gameState.missionComplete = false;
+            
+            // Reset badges
+            nasaBadges.forEach(badge => badge.earned = false);
+            
+            // Update UI
+            updateStats();
+            missionData.innerHTML = `
+                <p>Welcome, Ocean Guardian! Your mission is to protect marine ecosystems using NASA satellite data.</p>
+                <p>Click on any marine element to analyze threats and take protective actions.</p>
+                <p style="margin-top: 15px; color: #7fdbff;"><i class="fas fa-info-circle"></i> Each successful action improves ocean health and earns you points.</p>
+            `;
+            actionsContainer.innerHTML = '';
+            completionScreen.style.display = 'none';
+            completeBtn.disabled = true;
+            
+            // Reset marine elements animation
+            document.querySelectorAll('.marine-element').forEach(element => {
+                element.classList.add('pulse');
+            });
+            
+            // Add event listeners to marine elements
+            document.querySelectorAll('.marine-element').forEach(element => {
+                element.addEventListener('click', handleElementClick);
+            });
+        }
+
+        // Handle marine element click
+        function handleElementClick(event) {
+            const target = event.currentTarget;
+            const elementId = target.getAttribute('data-target');
+            
+            // Remove pulse animation from clicked element
+            target.classList.remove('pulse');
+            
+            gameState.currentTarget = elementId;
+            const element = marineElements[elementId];
+            
+            // Update mission data
+            missionData.innerHTML = `
+                <h3 style="color: #7fdbff; margin-bottom: 10px;">${element.name} <i class="fas fa-water"></i></h3>
+                <p>${element.description}</p>
+                <p style="margin: 10px 0;"><strong>NASA Data:</strong> ${element.data}</p>
+                <div style="margin-top: 15px;">
+                    <strong>Threats:</strong> 
+                    ${element.threats.map(threat => `<span style="display: inline-block; background: rgba(255,0,0,0.2); padding: 3px 8px; border-radius: 10px; margin: 3px;">${threat}</span>`).join('')}
+                </div>
+            `;
+            
+            // Display actions
+            displayActions(element.actions, elementId);
+        }
+
+        // Display available actions
+        function displayActions(actions, elementId) {
+            actionsContainer.innerHTML = '<div class="mission-title"><i class="fas fa-tasks"></i> Available Actions</div>';
+            
+            actions.forEach((action, index) => {
+                const actionElement = document.createElement('div');
+                actionElement.className = 'nasa-badge';
+                actionElement.innerHTML = `
+                    <div class="badge-icon">${action.icon}</div>
+                    <div class="badge-info">
+                        <div class="badge-title">${action.name}</div>
+                        <div class="badge-desc">${action.description}</div>
+                    </div>
+                    <button class="action-btn take-action" data-action="${index}">
+                        <i class="fas fa-play"></i> Activate
+                    </button>
+                `;
+                actionsContainer.appendChild(actionElement);
+            });
+            
+            // Add event listeners to action buttons
+            document.querySelectorAll('.take-action').forEach(button => {
+                button.addEventListener('click', function() {
+                    const actionIndex = parseInt(this.getAttribute('data-action'));
+                    takeAction(elementId, actionIndex);
+                });
+            });
+        }
+
+        // Take action to protect marine element
+        function takeAction(elementId, actionIndex) {
+            const element = marineElements[elementId];
+            const action = element.actions[actionIndex];
+            
+            // Record action
+            if (!gameState.actionsTaken[elementId]) {
+                gameState.actionsTaken[elementId] = [];
+                gameState.threatsRemaining--;
+            }
+            gameState.actionsTaken[elementId].push(actionIndex);
+            
+            // Update score and health
+            gameState.score += action.points;
+            gameState.oceanHealth = Math.min(100, gameState.oceanHealth + action.healthImpact);
+            
+            // Update UI
+            updateStats();
+            
+            // Check if mission can be completed
+            if (Object.keys(gameState.actionsTaken).length >= 3) {
+                completeBtn.disabled = false;
+            }
+            
+            // Check for badges
+            checkBadges();
+            
+            // Show success message with animation
+            const successMsg = document.createElement('div');
+            successMsg.innerHTML = `<p style="color: #7fdbff; margin-top: 10px; animation: fadeIn 0.5s;"><i class="fas fa-check-circle"></i> Action successful! +${action.points} points, Ocean Health +${action.healthImpact}%</p>`;
+            missionData.appendChild(successMsg);
+            
+            // Remove success message after 3 seconds
+            setTimeout(() => {
+                successMsg.remove();
+            }, 3000);
+        }
+
+        // Update game statistics
+        function updateStats() {
+            scoreElement.textContent = gameState.score;
+            healthElement.textContent = `${gameState.oceanHealth}%`;
+            badgesElement.textContent = gameState.badgesEarned.length;
+            threatsElement.textContent = gameState.threatsRemaining;
+        }
+
+        // Check for earned badges
+        function checkBadges() {
+            // Earth Observer - Use NASA data in 5 scenarios
+            if (Object.keys(gameState.actionsTaken).length >= 5 && !nasaBadges[0].earned) {
+                awardBadge(0);
+            }
+            
+            // Ocean Guardian - Protect all 5 marine elements
+            if (Object.keys(gameState.actionsTaken).length >= 5 && !nasaBadges[1].earned) {
+                awardBadge(1);
+            }
+            
+            // Climate Hero - Maintain ocean health above 80%
+            if (gameState.oceanHealth >= 80 && !nasaBadges[2].earned) {
+                awardBadge(2);
+            }
+            
+            // Data Scientist - Analyze all NASA data types (all elements)
+            if (Object.keys(gameState.actionsTaken).length >= 5 && !nasaBadges[3].earned) {
+                awardBadge(3);
+            }
+            
+            // Marine Biologist - Protect coral and whales
+            if (gameState.actionsTaken['coral'] && gameState.actionsTaken['whale'] && !nasaBadges[4].earned) {
+                awardBadge(4);
+            }
+            
+            // Deep Sea Explorer - Complete mission with maximum score
+            if (gameState.score >= 500 && !nasaBadges[5].earned) {
+                awardBadge(5);
+            }
+        }
+
+        // Award a badge
+        function awardBadge(badgeIndex) {
+            nasaBadges[badgeIndex].earned = true;
+            gameState.badgesEarned.push(nasaBadges[badgeIndex]);
+            
+            // Show notification
+            const badgeNotification = document.createElement('div');
+            badgeNotification.className = 'nasa-badge';
+            badgeNotification.style.background = 'rgba(255,215,0,0.2)';
+            badgeNotification.style.border = '2px solid gold';
+            badgeNotification.style.animation = 'pulse 2s';
+            badgeNotification.innerHTML = `
+                <div class="badge-icon">${nasaBadges[badgeIndex].icon}</div>
+                <div class="badge-info">
+                    <div class="badge-title">Badge Earned: ${nasaBadges[badgeIndex].title}</div>
+                    <div class="badge-desc">${nasaBadges[badgeIndex].description}</div>
+                </div>
+            `;
+            missionData.appendChild(badgeNotification);
+            
+            // Remove notification after 5 seconds
+            setTimeout(() => {
+                badgeNotification.remove();
+            }, 5000);
+        }
+
+        // Complete the mission
+        function completeMission() {
+            gameState.missionComplete = true;
+            
+            // Calculate final score bonus based on ocean health
+            const healthBonus = Math.floor(gameState.oceanHealth / 10) * 50;
+            gameState.score += healthBonus;
+            
+            // Update final stats
+            finalScoreElement.textContent = gameState.score;
+            finalHealthElement.textContent = `${gameState.oceanHealth}%`;
+            finalBadgesElement.textContent = gameState.badgesEarned.length;
+            
+            // Display earned badges
+            badgesEarnedContainer.innerHTML = '';
+            gameState.badgesEarned.forEach(badge => {
+                const badgeElement = document.createElement('div');
+                badgeElement.className = 'earned-badge';
+                badgeElement.innerHTML = `
+                    <div style="font-size: 3rem;">${badge.icon}</div>
+                    <h4>${badge.title}</h4>
+                    <p>${badge.description}</p>
+                `;
+                badgesEarnedContainer.appendChild(badgeElement);
+            });
+            
+            // Show completion screen
+            completionScreen.style.display = 'block';
+        }
+
+        // Event listeners
+        restartBtn.addEventListener('click', initGame);
+        completeBtn.addEventListener('click', completeMission);
+        newMissionBtn.addEventListener('click', initGame);
+
+        // Initialize the game
+        initGame();
+    </script>
+</body>
+</html>

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ocean Health Quiz - NASA Data</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .quiz-container {
+            display: none;
+        }
+        
+        .question-container {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .question-number {
+            font-size: 0.9rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+        
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 8px;
+            padding: 15px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+        
+        .option:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .option.correct {
+            background: rgba(46, 204, 113, 0.7);
+        }
+        
+        .option.incorrect {
+            background: rgba(231, 76, 60, 0.7);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        button {
+            background: #3498db;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 25px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .score-container {
+            text-align: center;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .score-text {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .nasa-fact {
+            font-style: italic;
+            margin-top: 15px;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #3498db;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo i {
+            font-size: 2.5rem;
+            color: var(--accent);
+        }
+
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--accent), #4fc3f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .nasa-badge {
+            background: var(--nasa-blue);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 8px 15px;
+            border-radius: 5px;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ocean Health Quiz</h1>
+            <p class="subtitle">Test your knowledge about oceans and ocean health with NASA data</p>
+              <header>
+            <div class="logo">
+                <i class="fas fa-water"></i>
+                <h1>Ocean Pulse <span class="nasa-badge">NASA DATA</span></h1>
+            
+            <nav class="nav-links">
+                <a href="nasaspace.html" >Dashboard</a>
+                <a href="oceangame.html">Ocean Game</a>
+                <a href="quiz.html" class="active">Ocean Quiz</a>
+                <a href="nasaspace.html">Ocean Stories</a>
+                <a href="nasaspace.html">NASA Data</a>
+            </nav>
+        </header>
+        
+        <div id="start-container">
+            <div class="question-container">
+                <p>Welcome to the Ocean Health Quiz! This quiz will test your knowledge about our oceans, marine ecosystems, and the latest findings from NASA's oceanographic research.</p>
+                <p>You'll answer multiple-choice questions and receive a score at the end. Let's see how much you know about our blue planet!</p>
+            </div>
+            <div class="controls">
+                <button id="start-btn">Start Quiz</button>
+            </div>
+        </div>
+        
+        <div id="quiz-container" class="quiz-container">
+            <div class="progress-bar">
+                <div class="progress" id="progress"></div>
+            </div>
+            <div class="question-container">
+                <div class="question-number" id="question-number">Question 1 of 10</div>
+                <div class="question-text" id="question-text"></div>
+                <div class="options-container" id="options-container"></div>
+            </div>
+            <div class="controls">
+                <button id="next-btn" style="display: none;">Next Question</button>
+            </div>
+        </div>
+        
+        <div id="score-container" class="score-container">
+            <div class="score-text" id="score-text"></div>
+            <div id="nasa-fact" class="nasa-fact"></div>
+            <div class="controls">
+                <button id="restart-btn">Take Another Quiz</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Quiz questions with NASA-related ocean facts
+        const quizQuestions = [
+            {
+                question: "According to NASA, what percentage of Earth's surface is covered by oceans?",
+                options: ["61%", "71%", "81%", "91%"],
+                correct: 1,
+                nasaFact: "NASA's satellite observations confirm that approximately 71% of Earth's surface is covered by oceans, which contain about 97% of Earth's water."
+            },
+            {
+                question: "NASA's GRACE satellites have been monitoring changes in what ocean-related phenomenon?",
+                options: ["Ocean color", "Sea level rise", "Ocean acidity", "Marine biodiversity"],
+                correct: 1,
+                nasaFact: "NASA's GRACE (Gravity Recovery and Climate Experiment) mission has provided crucial data on sea level rise by measuring changes in Earth's gravity field caused by water movement."
+            },
+            {
+                question: "What is the primary cause of sea level rise, according to NASA's research?",
+                options: ["Thermal expansion of seawater", "Melting glaciers and ice sheets", "Both thermal expansion and melting ice", "Changes in ocean currents"],
+                correct: 2,
+                nasaFact: "NASA research shows that sea level rise is caused by both thermal expansion (water expanding as it warms) and the melting of glaciers and ice sheets, with each contributing roughly half of the observed rise."
+            },
+            {
+                question: "NASA's PACE mission is designed to study what aspect of ocean health?",
+                options: ["Ocean floor mapping", "Phytoplankton and ocean color", "Deep sea vents", "Marine animal migration"],
+                correct: 1,
+                nasaFact: "NASA's PACE (Plankton, Aerosol, Cloud, ocean Ecosystem) mission studies phytoplankton populations through ocean color measurements, providing insights into ocean health and the global carbon cycle."
+            },
+            {
+                question: "How much has global sea level risen since 1993, according to NASA satellite data?",
+                options: ["About 2 inches (5 cm)", "About 4 inches (10 cm)", "About 6 inches (15 cm)", "About 8 inches (20 cm)"],
+                correct: 1,
+                nasaFact: "NASA satellite data shows that global sea level has risen about 4 inches (10 cm) since 1993, with the rate of rise accelerating in recent years."
+            },
+            {
+                question: "What phenomenon does NASA study that affects ocean temperatures and weather patterns worldwide?",
+                options: ["El Niño-Southern Oscillation (ENSO)", "The Gulf Stream", "The Pacific Garbage Patch", "Deep ocean currents"],
+                correct: 0,
+                nasaFact: "NASA studies the El Niño-Southern Oscillation (ENSO) using satellites and ocean buoys to understand how this climate pattern affects ocean temperatures, weather, and marine ecosystems worldwide."
+            },
+            {
+                question: "NASA's satellite observations have shown a decline in what important marine organism?",
+                options: ["Coral reefs", "Phytoplankton", "Whale populations", "Kelp forests"],
+                correct: 1,
+                nasaFact: "NASA satellite data has shown a decline in phytoplankton populations in some ocean regions, which is concerning as these microscopic organisms produce about half of Earth's oxygen and form the base of marine food webs."
+            },
+            {
+                question: "What is ocean acidification, which NASA helps monitor?",
+                options: ["The process of oceans becoming more alkaline", "The process of oceans absorbing CO2 and becoming more acidic", "Pollution making oceans toxic", "Salt concentration increasing in oceans"],
+                correct: 1,
+                nasaFact: "Ocean acidification is the process where oceans absorb about 25% of the CO2 released by human activities, making seawater more acidic and threatening marine organisms with calcium carbonate shells or skeletons."
+            },
+            {
+                question: "How does NASA use satellites to monitor coral reef health?",
+                options: ["By measuring water temperature around reefs", "By detecting coral bleaching events", "By tracking fish populations near reefs", "By measuring reef size changes"],
+                correct: 1,
+                nasaFact: "NASA uses satellite sensors to detect coral bleaching events by measuring changes in ocean color and temperature, helping scientists monitor reef health on a global scale."
+            },
+            {
+                question: "What is the Great Pacific Garbage Patch, which NASA has studied from space?",
+                options: ["A large area of plastic debris in the Pacific Ocean", "A region with high concentrations of toxic waste", "An area where ocean currents converge", "A patch of unusually warm water"],
+                correct: 0,
+                nasaFact: "The Great Pacific Garbage Patch is a massive collection of plastic debris and microplastics in the North Pacific Ocean, which NASA has studied using satellite observations and ocean current models."
+            }
+        ];
+
+        // DOM elements
+        const startContainer = document.getElementById('start-container');
+        const quizContainer = document.getElementById('quiz-container');
+        const scoreContainer = document.getElementById('score-container');
+        const startBtn = document.getElementById('start-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const questionNumber = document.getElementById('question-number');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const scoreText = document.getElementById('score-text');
+        const nasaFact = document.getElementById('nasa-fact');
+        const progress = document.getElementById('progress');
+
+        // Quiz state
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedOption = null;
+
+        // Start the quiz
+        startBtn.addEventListener('click', startQuiz);
+
+        // Next question
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizQuestions.length) {
+                showQuestion();
+            } else {
+                showScore();
+            }
+        });
+
+        // Restart quiz
+        restartBtn.addEventListener('click', () => {
+            // Reset quiz state
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            // Show start screen
+            startContainer.style.display = 'block';
+            quizContainer.style.display = 'none';
+            scoreContainer.style.display = 'none';
+        });
+
+        function startQuiz() {
+            startContainer.style.display = 'none';
+            quizContainer.style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            // Reset state
+            selectedOption = null;
+            nextBtn.style.display = 'none';
+            
+            // Update progress bar
+            progress.style.width =`${(currentQuestionIndex / quizQuestions.length) * 100}%`;
+            
+            // Get current question
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            
+            // Update question number and text
+            questionNumber.textContent = `Question ${currentQuestionIndex + 1} of ${quizQuestions.length}`;
+            questionText.textContent = currentQuestion.question;
+            
+            // Clear options
+            optionsContainer.innerHTML = '';
+            
+            // Add options
+            currentQuestion.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.classList.add('option');
+                button.textContent = option;
+                button.addEventListener('click', () => selectOption(index, button));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function selectOption(index, button) {
+            // If already selected, do nothing
+            if (selectedOption !== null) return;
+            
+            selectedOption = index;
+            const currentQuestion = quizQuestions[currentQuestionIndex];
+            
+            // Disable all options
+            const options = document.querySelectorAll('.option');
+            options.forEach(opt => {
+                opt.disabled = true;
+            });
+            
+            // Check if correct
+            if (index === currentQuestion.correct) {
+                button.classList.add('correct');
+                score++;
+            } else {
+                button.classList.add('incorrect');
+                // Also show the correct answer
+                options[currentQuestion.correct].classList.add('correct');
+            }
+            
+            // Show next button
+            nextBtn.style.display = 'block';
+        }
+
+        function showScore() {
+            quizContainer.style.display = 'none';
+            scoreContainer.style.display = 'block';
+            
+            // Calculate percentage
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            
+            // Display score
+            scoreText.textContent = `You scored ${score} out of ${quizQuestions.length} (${percentage}%)`;
+            
+            // Display a random NASA fact
+            const randomFact = quizQuestions[Math.floor(Math.random() * quizQuestions.length)].nasaFact;
+            nasaFact.textContent = randomFact;
+        }
+    </script>
+</body>
+</html>
