@@ -3,1138 +3,2317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ocean Pulse_NASA Space Apps Challenge</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <title>YieldVault360 - Smart Farming Marketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', sans-serif;
         }
 
         :root {
-            --primary: #0066cc;
-            --secondary: #003366;
-            --accent: #00b3b3;
-            --nasa-blue: #0b3d91;
-            --nasa-red: #fc3d21;
-            --dark: #0a2a4a;
-            --light: #e6f7ff;
-            --success: #4caf50;
-            --warning: #ff9800;
-            --danger: #f44336;
+            --primary: #2e7d32;
+            --primary-light: #4caf50;
+            --primary-dark: #1b5e20;
+            --secondary: #ff8f00;
+            --secondary-light: #ffb74d;
+            --accent: #7c4dff;
+            --success: #00c853;
+            --warning: #ffd600;
+            --danger: #ff3d00;
+            --dark: #263238;
+            --light: #f5f9ff;
+            --gray: #90a4ae;
+            --white: #ffffff;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #2e7d32 0%, #4caf50 100%);
+            --gradient-3: linear-gradient(135deg, #ff8f00 0%, #ffb74d 100%);
+            --shadow-sm: 0 2px 10px rgba(0,0,0,0.1);
+            --shadow-md: 0 5px 20px rgba(0,0,0,0.15);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         body {
-            background: linear-gradient(135deg, var(--dark) 0%, #0d3b66 100%);
-            color: white;
+            background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
             min-height: 100vh;
-            line-height: 1.6;
-            overflow-x: hidden;
+            opacity: 0;
+            animation: fadeIn 1s ease-in forwards;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 20px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 0;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 30px;
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
         }
 
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
-        .logo i {
-            font-size: 2.5rem;
-            color: var(--accent);
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
         }
 
-        .logo h1 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(to right, var(--accent), #4fc3f7);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
 
-        .nasa-badge {
-            background: var(--nasa-blue);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            margin-left: 10px;
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 25px;
-        }
-
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 8px 15px;
-            border-radius: 5px;
-        }
-
-        .nav-links a:hover, .nav-links a.active {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: var(--accent);
-        }
-        .tabs a{
-             color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 8px 15px;
-            border-radius: 5px;
-        }
-
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 3fr;
-            gap: 25px;
-            margin-bottom: 40px;
-        }
-
-        .sidebar {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar h2 {
-            margin-bottom: 20px;
-            color: var(--accent);
-            font-size: 1.4rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .data-filters {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .filter-group {
-            margin-bottom: 15px;
-        }
-
-        .filter-group h3 {
-            font-size: 1rem;
-            margin-bottom: 10px;
-            color: #b3e5fc;
-        }
-
-        .filter-options {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .filter-options label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 5px 0;
-        }
-
-        .filter-options input[type="checkbox"] {
-            accent-color: var(--accent);
-        }
-
-        .date-range {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .date-range input {
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            background: rgba(0, 0, 0, 0.2);
-            color: white;
-        }
-
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .stats-cards {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s, background 0.3s;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-            background: rgba(255, 255, 255, 0.08);
-        }
-
-        .stat-card i {
-            font-size: 1.8rem;
-            color: var(--accent);
-        }
-
-        .stat-card h3 {
-            font-size: 0.9rem;
-            color: #b3e5fc;
-            font-weight: 500;
-        }
-
-        .stat-card .value {
-            font-size: 1.8rem;
-            font-weight: 700;
-        }
-
-        .stat-card .trend {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
-        }
-
-        .trend.up {
-            color: var(--success);
-        }
-
-        .trend.down {
-            color: var(--danger);
-        }
-
-        .charts {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 25px;
-        }
-
-        .chart-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .chart-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .chart-header h2 {
-            font-size: 1.3rem;
-            color: var(--accent);
-        }
-
-        .chart-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chart-actions button {
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            padding: 8px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .chart-actions button:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .chart-placeholder {
-            height: 300px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
+        /* Login Page */
+        .login-container {
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #b3e5fc;
-            font-size: 1.1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+            overflow: hidden;
         }
 
-        .map-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
+        .login-container::before {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            from { transform: rotate(45deg) translateX(-100%); }
+            to { transform: rotate(45deg) translateX(100%); }
+        }
+
+        .login-card {
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 40px;
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow-lg);
+            width: 90%;
+            max-width: 450px;
+            position: relative;
+            z-index: 10;
+            transform: scale(0.9);
+            animation: popIn 0.5s ease forwards;
         }
 
-        .map-header {
+        @keyframes popIn {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .login-logo {
+            font-size: 3rem;
+            font-weight: 800;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .login-logo span {
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-tabs {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            background: var(--light);
+            padding: 0.5rem;
+            border-radius: 50px;
         }
 
-        .map-header h2 {
-            font-size: 1.3rem;
-            color: var(--accent);
-        }
-
-        #ocean-map {
-            height: 400px;
-            border-radius: 10px;
-            z-index: 1;
-        }
-
-        .tab-container {
-            margin-top: 40px;
-        }
-
-        .tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .tab {
-            padding: 12px 25px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+        .login-tab {
+            flex: 1;
+            padding: 0.8rem;
+            text-align: center;
             cursor: pointer;
+            border-radius: 50px;
             transition: all 0.3s;
+            font-weight: 600;
         }
 
-        .tab.active {
-            background: var(--accent);
-            color: var(--dark);
-            font-weight: bold;
+        .login-tab.active {
+            background: var(--gradient-2);
+            color: white;
+            box-shadow: var(--shadow-sm);
         }
 
-        .tab-content {
+        .login-form {
             display: none;
+            animation: fadeIn 0.5s ease;
         }
 
-        .tab-content.active {
+        .login-form.active {
             display: block;
         }
 
-        .game-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .game-header h2 {
-            font-size: 1.3rem;
-            color: var(--accent);
-        }
-
-        .game-area {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 20px;
-        }
-
-        .game-map {
-            height: 400px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
+        .input-group {
             position: relative;
-            overflow: hidden;
+            margin-bottom: 1.5rem;
         }
 
-        .game-controls {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            transition: all 0.3s;
         }
 
-        .game-stats {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            padding: 15px;
+        .input-group input {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid transparent;
+            border-radius: 15px;
+            background: var(--light);
+            font-size: 1rem;
+            transition: all 0.3s;
         }
 
-        .game-stats h3 {
-            margin-bottom: 10px;
-            color: var(--accent);
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 5px rgba(46, 125, 50, 0.1);
         }
 
-        .game-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
+        .input-group input:focus + i {
+            color: var(--primary);
+            transform: translateY(-50%) scale(1.1);
         }
 
-        .game-actions button {
-            padding: 12px;
-            border-radius: 8px;
+        .login-btn {
+            width: 100%;
+            padding: 1rem;
             border: none;
-            background: var(--accent);
-            color: var(--dark);
-            font-weight: bold;
+            border-radius: 15px;
+            background: var(--gradient-2);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .game-actions button:hover {
-            background: #00cccc;
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
-        .quiz-container {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
-            padding: 25px;
+        .login-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .login-btn:hover::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Main App */
+        #mainApp {
+            display: none;
+        }
+
+        #mainApp.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255,255,255,0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .quiz-header {
+            padding: 1rem 2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            animation: slideIn 0.5s ease;
         }
 
-        .quiz-header h2 {
-            font-size: 1.3rem;
-            color: var(--accent);
-        }
-
-        .quiz-area {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .question {
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-        }
-
-        .options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .option {
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+        .logo {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             cursor: pointer;
             transition: all 0.3s;
         }
 
-        .option:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .logo:hover {
+            transform: scale(1.05);
         }
 
-        .option.correct {
-            background: var(--success);
+        .logo span {
+            background: var(--gradient-3);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .option.incorrect {
-            background: var(--danger);
+        .nav-items {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
         }
 
-        .stories-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .story-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
             overflow: hidden;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: transform 0.3s;
         }
 
-        .story-card:hover {
-            transform: translateY(-10px);
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-2);
+            transition: all 0.3s;
+            z-index: -1;
         }
 
-        .story-image {
-            height: 180px;
-            background-size: cover;
-            background-position: center;
+        .nav-item:hover::before {
+            left: 0;
         }
 
-        .story-content {
-            padding: 20px;
+        .nav-item:hover {
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
-        .story-content h3 {
-            margin-bottom: 10px;
-            color: var(--accent);
+        .nav-item.active {
+            background: var(--gradient-2);
+            color: white;
         }
 
-        .story-content p {
-            font-size: 0.9rem;
-            color: #b3e5fc;
-            margin-bottom: 15px;
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem 1rem;
+            background: var(--light);
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
         }
 
-        .read-more {
-            color: var(--accent);
-            text-decoration: none;
+        .user-profile:hover {
+            background: var(--gradient-2);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-weight: bold;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        /* Dashboard */
+        .dashboard {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        /* Welcome Section */
+        .welcome-section {
+            background: var(--gradient-1);
+            color: white;
+            padding: 2.5rem;
+            border-radius: 30px;
+            margin-bottom: 2rem;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 5px;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px 0;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: #b3e5fc;
-            font-size: 0.9rem;
-            margin-top: 40px;
-        }
-
-        .nasa-data-source {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        @media (max-width: 1200px) {
-            .stats-cards {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .charts {
-                grid-template-columns: 1fr;
-            }
-            
-            .stories-container {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .dashboard {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-cards {
-                grid-template-columns: 1fr;
-            }
-            
-            header {
-                flex-direction: column;
-                gap: 20px;
-            }
-            
-            .nav-links {
-                width: 100%;
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-            
-            .game-area {
-                grid-template-columns: 1fr;
-            }
-            
-            .stories-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .options {
-                grid-template-columns: 1fr;
-            }
-            /* .profile-container{
-                flex: 1 1 calc(33.333% -20px);
-                min-width: 200px;
-            } */
-        }
-    /* @media(max-width:480px){
-        .profile-container{
-            flex: 1 1 100%;
-        } 
-    }*/
-        .shortbio{
-            font-size: 0.95rem;
-
-        }
-        .fullbio{
-            max-height: 0;
+            position: relative;
             overflow: hidden;
-            transition: max-height 0.5s ease-in-out;
-            font-size: 0.9rem;
-            margin-top: 10px;
+            animation: float 6s ease-in-out infinite;
+        }
 
+        .welcome-section::before {
+            content: '🌱';
+            position: absolute;
+            font-size: 10rem;
+            opacity: 0.1;
+            right: -20px;
+            bottom: -20px;
+            transform: rotate(15deg);
+            animation: rotate 20s linear infinite;
         }
-        .profile-card:hover .fullbio,.profile-card:focus .fullbio{
-            max-height: 1000px;
-        }
-        .story-container{
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        .profile-container{
-            justify-content: center;
-            margin: 20px 10px;
-            padding: 15px;
-            border-radius: 5px;
-            box-sizing: border-box;
 
+        .welcome-text h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            animation: slideIn 0.5s ease;
         }
-        .profile-card{
-            padding: 20px;
-            width: 350px;
-            border-radius: 16px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+
+        .weather-card {
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem 2.5rem;
+            border-radius: 20px;
             text-align: center;
-            transition: transform 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .weather-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            background: rgba(255,255,255,0.3);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.8rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-2);
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card:hover::before {
+            width: 100%;
+            opacity: 0.1;
+        }
+
+        .stat-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0.5rem 0;
+        }
+
+        /* Vault Section */
+        .vault-section {
+            background: white;
+            border-radius: 30px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
+        }
+
+        .vault-section:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Goals Grid */
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .goal-card {
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+            border-radius: 20px;
+            padding: 1.8rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid rgba(0,0,0,0.05);
+        }
+
+        .goal-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-light);
+        }
+
+        .goal-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            from { transform: rotate(45deg) translateX(-100%); }
+            to { transform: rotate(45deg) translateX(100%); }
+        }
+
+        .goal-progress {
+            height: 12px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--gradient-2);
+            border-radius: 10px;
+            transition: width 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+
+        /* Products Grid */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s;
             cursor: pointer;
             position: relative;
         }
-        .profile-card:hover, .profile-card:focus {
-            transform: scale(1.05);
 
-
+        .product-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            box-shadow: var(--shadow-lg);
         }
-        
+
+        .product-image {
+            height: 200px;
+            background: linear-gradient(135deg, var(--primary-light)20, var(--primary)20);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            transition: all 0.3s;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.1);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--gradient-2);
+            color: white;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            animation: pulse 2s infinite;
+        }
+
+        .product-details {
+            padding: 1.5rem;
+        }
+
+        .product-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0.5rem 0;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--gradient-2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 30px;
+            padding: 2.5rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            transform: scale(0.9);
+            animation: popIn 0.3s ease forwards;
+        }
+
+        /* Toast Notifications */
+        .toast-container {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 3000;
+        }
+
+        .toast {
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transform: translateX(400px);
+            animation: slideInRight 0.3s ease forwards;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(400px); }
+            to { transform: translateX(0); }
+        }
+
+        .toast.success {
+            border-left: 5px solid var(--success);
+        }
+
+        .toast.error {
+            border-left: 5px solid var(--danger);
+        }
+
+        .toast.warning {
+            border-left: 5px solid var(--warning);
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--light);
+            border-top: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: rotate 1s linear infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 1rem;
+                padding: 1rem;
+            }
+            
+            .nav-items {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .welcome-section {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .goals-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-2);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1) rotate(90deg);
+        }
+
+        .fab-menu {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .fab:hover .fab-menu {
+            display: flex;
+        }
+
+        .fab-item {
+            width: 200px;
+            padding: 1rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow-md);
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: right;
+        }
+
+        .fab-item:hover {
+            transform: translateX(-10px);
+            background: var(--gradient-2);
+            color: white;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">
-                <i class="fas fa-water"></i>
-                <h1>Ocean Pulse <span class="nasa-badge">NASA DATA</span></h1>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-logo">
+                    Yield<span>Vault</span>360
+                </div>
+                <p>Smart Farming Marketplace</p>
             </div>
-            <nav class="nav-links">
-                <a href="#dashboard" class="active">Dashboard</a>
-                <a href="oceangame.html">Ocean Game</a>
-                <a href="quiz.html">Ocean Quiz</a>
-                <a href="#stories">Ocean Stories</a>
-                <a href="#nasadata">NASA Data</a>
-            </nav>
-        </header>
+            
+            <div class="login-tabs">
+                <div class="login-tab active" onclick="switchLoginTab('farmer')">Farmer</div>
+                <div class="login-tab" onclick="switchLoginTab('buyer')">Buyer</div>
+                <div class="login-tab" onclick="switchLoginTab('supplier')">Supplier</div>
+            </div>
 
-        <div class="dashboard" id="dashboard">
-            <aside class="sidebar">
-                <h2><i class="fas fa-sliders-h"></i> Data Filters</h2>
-                <div class="data-filters">
-                    <div class="filter-group">
-                        <h3>Ocean Parameters</h3>
-                        <div class="filter-options">
-                            <label>
-                                <input type="checkbox" checked>
-                                Sea Surface Temperature
-                            </label>
-                            <label>
-                                <input type="checkbox" checked>
-                                Salinity
-                            </label>
-                            <label>
-                                <input type="checkbox">
-                                Chlorophyll Concentration
-                            </label>
-                            <label>
-                                <input type="checkbox" checked>
-                                Sea Level Height
-                            </label>
-                            <label>
-                                <input type="checkbox">
-                                Ocean Currents
-                            </label>
-                        </div>
+            <!-- Farmer Login -->
+            <div id="farmerLogin" class="login-form active">
+                <form onsubmit="handleLogin(event, 'farmer')">
+                    <div class="input-group">
+                        <i class="fas fa-phone-alt"></i>
+                        <input type="tel" placeholder="Phone Number" value="0712345678" required>
                     </div>
-                    <div class="filter-group">
-                        <h3>NASA Data Sources</h3>
-                        <div class="filter-options">
-                            <label>
-                                <input type="checkbox" checked>
-                                MODIS Aqua
-                            </label>
-                            <label>
-                                <input type="checkbox" checked>
-                                VIIRS
-                            </label>
-                            <label>
-                                <input type="checkbox">
-                                GRACE-FO
-                            </label>
-                            <label>
-                                <input type="checkbox">
-                                SMAP
-                            </label>
-                        </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Password" value="farmer123" required>
                     </div>
-                    <div class="filter-group">
-                        <h3>Date Range</h3>
-                        <div class="date-range">
-                            <input type="date" value="2023-01-01">
-                            <input type="date" value="2023-12-31">
-                        </div>
-                    </div>
-                    <button class="apply-filters">Apply Filters</button>
-                </div>
-            </aside>
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-leaf"></i> Login as Farmer
+                    </button>
+                </form>
+            </div>
 
-            <main class="main-content">
-                <div class="stats-cards">
-                    <div class="stat-card">
-                        <i class="fas fa-thermometer-half"></i>
-                        <h3>Global Sea Surface Temp</h3>
-                        <div class="value">18.7°C</div>
-                        <div class="trend up">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>+0.3°C from 2022</span>
-                        </div>
+            <!-- Buyer Login -->
+            <div id="buyerLogin" class="login-form">
+                <form onsubmit="handleLogin(event, 'buyer')">
+                    <div class="input-group">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" placeholder="Email" value="buyer@agro.com" required>
                     </div>
-                    <div class="stat-card">
-                        <i class="fas fa-tint"></i>
-                        <h3>Arctic Sea Ice Extent</h3>
-                        <div class="value">4.21M km²</div>
-                        <div class="trend down">
-                            <i class="fas fa-arrow-down"></i>
-                            <span>-13% from 2000</span>
-                        </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Password" value="buyer123" required>
                     </div>
-                    <div class="stat-card">
-                        <i class="fas fa-wind"></i>
-                        <h3>Ocean Acidification</h3>
-                        <div class="value">pH 8.06</div>
-                        <div class="trend down">
-                            <i class="fas fa-arrow-down"></i>
-                            <span>-0.1 since 1750</span>
-                        </div>
-                    </div>
-                    <div class="stat-card">
-                        <i class="fas fa-ruler-combined"></i>
-                        <h3>Global Sea Level Rise</h3>
-                        <div class="value">+102 mm</div>
-                        <div class="trend up">
-                            <i class="fas fa-arrow-up"></i>
-                            <span>+3.7 mm/year</span>
-                        </div>
-                    </div>
-                </div>
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-store"></i> Login as Buyer
+                    </button>
+                </form>
+            </div>
 
-                <div class="charts">
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h2>NASA Sea Surface Temperature Data</h2>
-                            <div class="chart-actions">
-                                <button>1M</button>
-                                <button>6M</button>
-                                <button>1Y</button>
-                                <button>All</button>
-                            </div>
-                        </div>
-                        <div class="chart-placeholder">
-                            <i class="fas fa-satellite" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                            <div>NASA MODIS Aqua Satellite Data</div>
-                            <div style="font-size: 0.9rem; margin-top: 10px;">Sea Surface Temperature Anomalies</div>
-                        </div>
+            <!-- Supplier Login -->
+            <div id="supplierLogin" class="login-form">
+                <form onsubmit="handleLogin(event, 'supplier')">
+                    <div class="input-group">
+                        <i class="fas fa-building"></i>
+                        <input type="text" placeholder="Business ID" value="SUP123" required>
                     </div>
-                    <div class="chart-container">
-                        <div class="chart-header">
-                            <h2>Ocean Health Index</h2>
-                            <div class="chart-actions">
-                                <button>Pacific</button>
-                                <button>Atlantic</button>
-                                <button>Indian</button>
-                            </div>
-                        </div>
-                        <div class="chart-placeholder">
-                            <i class="fas fa-heartbeat" style="font-size: 3rem; margin-bottom: 15px;"></i>
-                            <div>Ocean Health Visualization</div>
-                            <div style="font-size: 0.9rem; margin-top: 10px;">Based on NASA Ocean Data</div>
-                        </div>
+                    <div class="input-group">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" placeholder="Password" value="supplier123" required>
                     </div>
-                </div>
-            </main>
+                    <button type="submit" class="login-btn">
+                        <i class="fas fa-truck"></i> Login as Supplier
+                    </button>
+                </form>
+            </div>
+
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <a href="#" style="color: var(--primary); text-decoration: none;">Forgot Password?</a>
+            </div>
         </div>
-
-        <div class="map-container" id="nasadata">
-            <div class="map-header">
-                <h2>NASA Global Ocean Monitoring</h2>
-                <div class="chart-actions">
-                    <button>Real-time</button>
-                    <button>Historical</button>
-                    <button>Predictive</button>
-                </div>
-            </div>
-            <div id="ocean-map"></div>
-        </div>
-
-        <div class="tab-container">
-            <div class="tabs">
-                <div class="tab active" data-tab="stories">Ocean Stories</div>
-                <a href="oceangame.html"><div class="tab " data-tab="game">Ocean Adventure Game</div></a>
-                <a href="quiz.html"><div class="tab" data-tab="quiz">Ocean Knowledge Quiz</div></a>
-                
-            </div>
-<!-- 
-            <div class="tab-content active" id="game-content">
-                <div class="game-container">
-                    <div class="game-header">
-                        <h2>Ocean Explorer Adventure</h2>
-                        <div class="chart-actions">
-                            <button>New Game</button>
-                            <button>Save Progress</button>
-                            <button>Leaderboard</button>
-                        </div>
-                    </div>
-                    <div class="game-area">
-                        <div class="game-map">
-                            <div style="position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 5px;">
-                                <h3>Mission: Explore the Pacific Garbage Patch</h3>
-                                <p>Collect data and clean up plastic waste!</p>
-                            </div>
-                            <div class="data-point" style="position: absolute; top: 30%; left: 25%; background: var(--accent); width: 20px; height: 20px; border-radius: 50%; animation: pulse 2s infinite;"></div>
-                            <div class="data-point" style="position: absolute; top: 45%; left: 50%; background: var(--accent); width: 20px; height: 20px; border-radius: 50%; animation: pulse 2s infinite;"></div>
-                            <div class="data-point" style="position: absolute; top: 60%; left: 70%; background: var(--accent); width: 20px; height: 20px; border-radius: 50%; animation: pulse 2s infinite;"></div>
-                        </div>
-                        <div class="game-controls">
-                            <div class="game-stats">
-                                <h3>Mission Stats</h3>
-                                <p>Data Collected: <strong>65%</strong></p>
-                                <p>Plastic Cleaned: <strong>42%</strong></p>
-                                <p>Marine Life Saved: <strong>18</strong></p>
-                                <p>NASA Badges: <strong>3/5</strong></p>
-                            </div>
-                            <div class="game-actions">
-                                <button>Collect Ocean Data</button>
-                                <button>Clean Plastic Waste</button>
-                                <button>Rescue Marine Life</button>
-                                <button>Analyze with NASA Tools</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="tab-content" id="quiz-content">
-                <div class="quiz-container">
-                    <div class="quiz-header">
-                        <h2>Ocean Knowledge Challenge</h2>
-                        <div class="chart-actions">
-                            <button>Score: 0/5</button>
-                            <button>Restart Quiz</button>
-                        </div>
-                    </div>
-                    <div class="quiz-area">
-                        <div class="question">
-                            <h3>Question 1: What percentage of Earth's surface is covered by oceans?</h3>
-                        </div>
-                        <div class="options">
-                            <div class="option">50%</div>
-                            <div class="option correct">71%</div>
-                            <div class="option">65%</div> 
-                            <div class="option">80%</div>
-                        </div>
-                        <div class="question">
-                            <h3>Question 2: Which NASA satellite mission studies sea level change?</h3>
-                        </div>
-                        <div class="options">
-                            <div class="option">Hubble</div>
-                            <div class="option">James Webb</div>
-                            <div class="option correct">GRACE-FO</div>
-                            <div class="option">Voyager</div>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
-
-                    <!-- <section class="profile-container">
-                        <div class="profile-card" tabindex="0">
-                    <div class="story-card">
-                        <div class="story-image" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80');"></div>
-                        <div class="story-content">
-                            <h3>Echoes of the Reef</h3>
-                            
-                            <p class="shortbio">Learn how climate change and ocean acidification are threatening the vibrant ecosystems of coral reefs worldwide.</p>
-                        <div class="fullbio">
-                            <p>
-                                The ocean had always whispered to Lila. As a child growing up on the coast of Zanzibar, she’d dive into the turquoise waters and listen to the crackle of shrimp, the hum of fish, and the gentle sway of coral polyps. The reef was her sanctuary—a living mosaic of color and life.
-                                
-                                Years later, as a marine biologist, Lila returned to the reef she once knew. But it was silent.
-                                
-                                The once-vibrant corals were pale, brittle ghosts of their former selves. Bleaching had swept through like wildfire, triggered by relentless heatwaves. Fish had vanished. The reef’s heartbeat was fading.
-                                
-                                Determined to help, Lila joined a global restoration team. They planted coral fragments, monitored water temperatures, and even used underwater speakers to mimic healthy reef sounds—hoping to lure marine life back. But the ocean was changing faster than they could heal it.
-                                
-                                One night, while diving alone, Lila found a single patch of coral glowing faintly. She placed her hand near it, and for a moment, the reef pulsed—like it remembered her.
-                                
-                                “We are not dead,” it seemed to say. “But we are drowning in your silence.”
-                                
-                                Lila surfaced with tears in her mask. She knew then that saving the reef wasn’t just about science—it was about storytelling. About making the world hear the reef’s voice.
-                                
-                                So she wrote. She spoke. She rallied. And slowly, the tide began to turn</p></div>
-                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                            
-                        </div>
-                    </div></div></section> -->
-
-                            <!-- <section class="profile-container">
-                                <div class="profile-card" tabindex="0">
-                            <div class="story-card">
-                                <div class="story-image" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80');"></div>
-                                <div class="story-content">
-                                    <h3>Echoes of the Reef</h3>
-                                    
-                                    <p class="shortbio">Learn how climate change and ocean acidification are threatening the vibrant ecosystems of coral reefs worldwide.</p>
-                                <div class="fullbio">
-                                    <p>
-                                        The ocean had always whispered to Lila. As a child growing up on the coast of Zanzibar, she’d dive into the turquoise waters and listen to the crackle of shrimp, the hum of fish, and the gentle sway of coral polyps. The reef was her sanctuary—a living mosaic of color and life.
-                                        
-                                        Years later, as a marine biologist, Lila returned to the reef she once knew. But it was silent.
-                                        
-                                        The once-vibrant corals were pale, brittle ghosts of their former selves. Bleaching had swept through like wildfire, triggered by relentless heatwaves. Fish had vanished. The reef’s heartbeat was fading.
-                                        
-                                        Determined to help, Lila joined a global restoration team. They planted coral fragments, monitored water temperatures, and even used underwater speakers to mimic healthy reef sounds—hoping to lure marine life back. But the ocean was changing faster than they could heal it.
-                                        
-                                        One night, while diving alone, Lila found a single patch of coral glowing faintly. She placed her hand near it, and for a moment, the reef pulsed—like it remembered her.
-                                        
-                                        “We are not dead,” it seemed to say. “But we are drowning in your silence.”
-                                        
-                                        Lila surfaced with tears in her mask. She knew then that saving the reef wasn’t just about science—it was about storytelling. About making the world hear the reef’s voice.
-                                        
-                                        So she wrote. She spoke. She rallied. And slowly, the tide began to turn</p></div>
-                                    <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                                    
-                                </div>
-                            </div></div></section> -->
-<section id="stories" class="story-container">
-                                    <section class="profile-container">
-                                        <div class="profile-card" tabindex="0">
-                                    <div class="story-card">
-                                        <div class="story-image" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80');"></div>
-                                        <div class="story-content">
-                                            <h3>Echoes of the Reef</h3>
-                                            
-                                            <p class="shortbio">Learn how climate change and ocean acidification are threatening the vibrant ecosystems of coral reefs worldwide.</p>
-                                        <div class="fullbio">
-                                            <p>
-                                                The ocean had always whispered to Lila. As a child growing up on the coast of Zanzibar, she’d dive into the turquoise waters and listen to the crackle of shrimp, the hum of fish, and the gentle sway of coral polyps. The reef was her sanctuary—a living mosaic of color and life.
-                                                
-                                                Years later, as a marine biologist, Lila returned to the reef she once knew. But it was silent.
-                                                
-                                                The once-vibrant corals were pale, brittle ghosts of their former selves. Bleaching had swept through like wildfire, triggered by relentless heatwaves. Fish had vanished. The reef’s heartbeat was fading.
-                                                
-                                                Determined to help, Lila joined a global restoration team. They planted coral fragments, monitored water temperatures, and even used underwater speakers to mimic healthy reef sounds—hoping to lure marine life back. But the ocean was changing faster than they could heal it.
-                                                
-                                                One night, while diving alone, Lila found a single patch of coral glowing faintly. She placed her hand near it, and for a moment, the reef pulsed—like it remembered her.
-                                                
-                                                “We are not dead,” it seemed to say. “But we are drowning in your silence.”
-                                                
-                                                Lila surfaced with tears in her mask. She knew then that saving the reef wasn’t just about science—it was about storytelling. About making the world hear the reef’s voice.
-                                                
-                                                So she wrote. She spoke. She rallied. And slowly, the tide began to turn</p></div>
-                                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                                            
-                                        </div>
-                                    </div></div></section>
-                                    
-                                    <section class="profile-container">
-                                        <div class="profile-card" tabindex="0">
-                                    <div class="story-card">
-                                        <div class="story-image" style="background-image: url('https://images.unsplash.com/photo-1559827260-dc66d52bef19?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80');"></div>
-                                        <div class="story-content">
-                                            <h3>The Abyss Whispers</h3>
-                                            
-                                            <p class="shortbio">Explore the alien world of the deep ocean where strange creatures thrive in complete darkness under immense pressure.</p>
-                                        <div class="fullbio">
-                                            <p>
-                                                No one knew why Captain Nyana kept returning to the Trench of Silence—a place so deep<b> and dark that sonar refused to echo. Her crew whispered of strange lights and voices that came through<b> the hull at night, but she never spoke of what she saw.
-                                
-                                                    On her final voyage, the submarine Umoya descended past the known maps, where pressure<b> crushed steel and time felt slower. The crew lost contact with the surface after crossing the 10,000-meter mark.<b> That’s when the ocean began to speak.
-                                                    
-                                                    Not in words, but in memories.
-                                                    
-                                                    Each crew member began reliving moments they’d never experienced—wars from centuries past,<b> alien landscapes beneath the sea, and a city of glass domes glowing with bioluminescent runes.<b> Nyana alone remained unaffected, her eyes locked on the sonar screen that now pulsed with a heartbeat.
-                                                    
-                                                    Then, silence.
-                                                    
-                                                    The Umoya resurfaced weeks later, empty. No damage. No sign of struggle.<b> Just a single journal page taped to the control panel:
-                                                    
-                                                    “The sea remembers everything. We were never alone.”</p></div>
-                                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                                            
-                                        </div>
-                                    </div></div></section>
-
-                                    
-                                    <section class="profile-container">
-                                        <div class="profile-card" tabindex="0">
-                                    <div class="story-card">
-                                        <div class="story-image" style="background-image: url('https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80');"></div>
-                                        <div class="story-content">
-                                            <h3>The Satellite That Listened to the Sea</h3>
-                                            
-                                            <p class="shortbio">Discover how NASA satellites monitor ocean health, track climate change, and help protect marine environments.</p>
-                                        <div class="fullbio">
-                                            <p>
-                                                High above Earth, in the quiet vacuum of space, a satellite named PACE (Plankton, Aerosol, Cloud, ocean Ecosystem) opened its eyes in February 2024. Unlike its predecessors, PACE wasn’t just watching the planet—it was listening.
-
-                                It listened to the colors of the ocean, decoding the whispers of phytoplankton blooms. It tracked the dance of aerosols and clouds, revealing how dust from deserts could seed storms or cool the planet. And it watched coral reefs fade, ice melt, and currents shift—like a silent guardian of Earth’s heartbeat.
-                                
-                                Back on Earth, Dr. Amara, a climate scientist in Kenya, relied on PACE’s data to monitor the health of the Indian Ocean. One morning, she noticed a strange signal: a sudden surge in chlorophyll levels off the coast of Somalia. It wasn’t just a bloom—it was a warning.
-                                
-                                The bloom was toxic, triggered by warming waters and nutrient runoff. Fish began to die. Coastal communities fell ill. But thanks to PACE’s early detection, Amara alerted local governments, and emergency measures were deployed. Lives were saved.
-                                
-                                “It’s like the ocean is speaking through the satellite,” Amara told her team. “And we’re finally learning how to listen.”
-                                
-                                PACE continued its orbit, collecting billions of data points—each one a pixel in the story of Earth’s changing climate. It didn’t need applause. It didn’t need rest. It just kept watching, listening, and reminding humanity that the oceans are alive, and they are speaking</p></div>
-                                            <a href="#" class="read-more">Read More <i class="fas fa-arrow-right"></i></a>
-                                            
-                                        </div>
-                                    </div></div></section>
-                                    </section>
-
-        <footer>
-            <p>P-Ocean Pulse Project &copy; 2025 by CyberWorld-Tech| NASA Space Apps Challenge</p>
-            <div class="nasa-data-source">
-                <i class="fas fa-satellite"></i>
-                <p>Data sources: NASA Earth Observing System, MODIS, VIIRS, GRACE-FO, and JPL Physical Oceanography DAAC</p>
-            </div>
-        </footer>
     </div>
 
+    <!-- Main App -->
+    <div id="mainApp">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="logo" onclick="showDashboard('farmer')">
+                Yield<span>Vault</span>360
+            </div>
+            <div class="nav-items">
+                <div class="nav-item active" onclick="showDashboard('farmer')">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="nav-item" onclick="showDashboard('marketplace')">
+                    <i class="fas fa-store"></i>
+                    <span>Marketplace</span>
+                </div>
+                <div class="nav-item" onclick="showDashboard('vault')">
+                    <i class="fas fa-wallet"></i>
+                    <span>My Vault</span>
+                    <span class="badge" id="vaultNotification">2</span>
+                </div>
+                <div class="nav-item" onclick="showDashboard('inputs')">
+                    <i class="fas fa-seedling"></i>
+                    <span>Inputs</span>
+                </div>
+                <div class="nav-item" onclick="showDashboard('analytics')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Analytics</span>
+                </div>
+                <div class="user-profile" onclick="toggleUserMenu()">
+                    <div class="user-avatar" id="userAvatar">JM</div>
+                    <div class="user-info">
+                        <div style="font-weight: 600;" id="userName">John Mwangi</div>
+                        <div style="font-size: 0.8rem; color: var(--gray);">Farmer</div>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+            </div>
+        </nav>
+
+        <!-- User Menu Dropdown -->
+        <div id="userMenu" style="display: none; position: fixed; top: 80px; right: 20px; background: white; border-radius: 15px; box-shadow: var(--shadow-lg); padding: 1rem; z-index: 1000;">
+            <div style="padding: 0.5rem 1rem; cursor: pointer; border-radius: 10px; transition: all 0.3s;" onclick="viewProfile()">
+                <i class="fas fa-user"></i> Profile
+            </div>
+            <div style="padding: 0.5rem 1rem; cursor: pointer; border-radius: 10px; transition: all 0.3s;" onclick="viewSettings()">
+                <i class="fas fa-cog"></i> Settings
+            </div>
+            <div style="padding: 0.5rem 1rem; cursor: pointer; border-radius: 10px; transition: all 0.3s;" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> Logout
+            </div>
+        </div>
+
+        <!-- Main Container -->
+        <div class="container">
+            <!-- Farmer Dashboard -->
+            <div id="farmerDashboard" class="dashboard active">
+                <!-- Welcome Section -->
+                <div class="welcome-section">
+                    <div class="welcome-text">
+                        <h1 id="greetingMessage">Good morning, John! 🌞</h1>
+                        <p>Your farm is doing great today</p>
+                        <div style="margin-top: 1rem;">
+                            <span class="badge" style="background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 20px;">
+                                <i class="fas fa-trophy"></i> Top 10% Farmer
+                            </span>
+                        </div>
+                    </div>
+                    <div class="weather-card" onclick="showWeatherDetails()">
+                        <div style="font-size: 2rem;">☀️</div>
+                        <div style="font-size: 1.5rem; font-weight: bold;">28°C</div>
+                        <div>Nakuru, Kenya</div>
+                        <div style="font-size: 0.9rem;">Good planting conditions</div>
+                        <div style="margin-top: 0.5rem;">
+                            <i class="fas fa-tint"></i> 65% Humidity
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card" onclick="viewActiveListings()">
+                        <div class="stat-icon">🌽</div>
+                        <div class="stat-label">Active Listings</div>
+                        <div class="stat-value" id="activeListings">3</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up" style="color: var(--success);"></i> +2 this week
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="viewVaultDetails()">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-label">Vault Balance</div>
+                        <div class="stat-value" id="statVaultBalance">KES 12,500</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up" style="color: var(--success);"></i> +KES 3,000
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="viewOrders()">
+                        <div class="stat-icon">📦</div>
+                        <div class="stat-label">Pending Orders</div>
+                        <div class="stat-value">2</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-clock"></i> Ready for harvest
+                        </div>
+                    </div>
+                    <div class="stat-card" onclick="viewSavingsGoals()">
+                        <div class="stat-icon">🎯</div>
+                        <div class="stat-label">Savings Goals</div>
+                        <div class="stat-value">4</div>
+                        <div class="stat-trend">
+                            <i class="fas fa-check-circle" style="color: var(--success);"></i> 2 completed
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vault Section -->
+                <div class="vault-section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-shield-alt"></i> My AgriVault</h2>
+                        <div>
+                            <button class="btn btn-outline" onclick="showDepositModal()" style="margin-right: 1rem;">
+                                <i class="fas fa-plus"></i> Add Money
+                            </button>
+                            <button class="btn btn-primary" onclick="showTransferModal()">
+                                <i class="fas fa-exchange-alt"></i> Transfer
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Savings Goals -->
+                    <h3 style="margin-bottom: 1rem;">Active Savings Goals</h3>
+                    <div class="goals-grid" id="goalsContainer"></div>
+
+                    <!-- Quick Actions -->
+                    <div style="display: flex; gap: 1rem; margin-top: 1.5rem; flex-wrap: wrap;">
+                        <button class="btn btn-outline" onclick="showGoalModal()">
+                            <i class="fas fa-plus-circle"></i> Create New Goal
+                        </button>
+                        <button class="btn btn-outline" onclick="convertToDraft()">
+                            <i class="fas fa-file-signature"></i> Create Savings Draft
+                        </button>
+                        <button class="btn btn-outline" onclick="scheduleSavings()">
+                            <i class="fas fa-clock"></i> Schedule Savings
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="vault-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-history"></i> Recent Transactions</h3>
+                        <button class="btn btn-primary" onclick="viewAllTransactions()">
+                            View All <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="transactions-list" id="transactionsList"></div>
+                </div>
+
+                <!-- Market Insights -->
+                <div class="vault-section">
+                    <div class="section-header">
+                        <h3><i class="fas fa-chart-line"></i> Market Insights</h3>
+                        <button class="btn btn-primary" onclick="refreshInsights()">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="padding: 1rem; background: var(--light); border-radius: 15px;">
+                            <div style="color: var(--gray);">Maize Price</div>
+                            <div style="font-size: 1.5rem; font-weight: bold;">KES 45/kg</div>
+                            <div style="color: var(--success);"><i class="fas fa-arrow-up"></i> +5%</div>
+                        </div>
+                        <div style="padding: 1rem; background: var(--light); border-radius: 15px;">
+                            <div style="color: var(--gray);">Beans Price</div>
+                            <div style="font-size: 1.5rem; font-weight: bold;">KES 85/kg</div>
+                            <div style="color: var(--success);"><i class="fas fa-arrow-up"></i> +3%</div>
+                        </div>
+                        <div style="padding: 1rem; background: var(--light); border-radius: 15px;">
+                            <div style="color: var(--gray);">Fertilizer</div>
+                            <div style="font-size: 1.5rem; font-weight: bold;">KES 2,800/bag</div>
+                            <div style="color: var(--danger);"><i class="fas fa-arrow-down"></i> -2%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marketplace Dashboard -->
+            <div id="marketplaceDashboard" class="dashboard">
+                <div class="section-header">
+                    <h2><i class="fas fa-store"></i> Marketplace</h2>
+                    <button class="btn btn-primary" onclick="showListingModal()">
+                        <i class="fas fa-plus"></i> List Your Produce
+                    </button>
+                </div>
+
+                <div class="marketplace-tabs" style="display: flex; gap: 1rem; margin-bottom: 2rem;">
+                    <div class="tab active" onclick="switchMarketplaceTab('sell')">Sell Produce</div>
+                    <div class="tab" onclick="switchMarketplaceTab('buy')">Buy Inputs</div>
+                    <div class="tab" onclick="switchMarketplaceTab('orders')">My Orders</div>
+                </div>
+
+                <div id="sellTab" class="tab-content">
+                    <div class="products-grid" id="sellProducts"></div>
+                </div>
+
+                <div id="buyTab" class="tab-content" style="display: none;">
+                    <div class="products-grid" id="buyProducts"></div>
+                </div>
+
+                <div id="ordersTab" class="tab-content" style="display: none;">
+                    <div class="transactions-list" id="ordersList"></div>
+                </div>
+            </div>
+
+            <!-- Vault Dashboard -->
+            <div id="vaultDashboard" class="dashboard">
+                <div class="section-header">
+                    <h2><i class="fas fa-wallet"></i> My Vault</h2>
+                    <div>
+                        <button class="btn btn-outline" onclick="showDepositModal()" style="margin-right: 1rem;">
+                            <i class="fas fa-plus"></i> Deposit
+                        </button>
+                        <button class="btn btn-primary" onclick="showWithdrawModal()">
+                            <i class="fas fa-arrow-up"></i> Withdraw
+                        </button>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-label">Total Balance</div>
+                        <div class="stat-value" id="vaultTotalBalance">KES 12,500</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">🔒</div>
+                        <div class="stat-label">Locked in Goals</div>
+                        <div class="stat-value" id="lockedBalance">KES 8,000</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💳</div>
+                        <div class="stat-label">Available</div>
+                        <div class="stat-value" id="availableBalance">KES 4,500</div>
+                    </div>
+                </div>
+
+                <div class="vault-section">
+                    <h3>Active Savings Drafts</h3>
+                    <div class="goals-grid" id="draftsContainer"></div>
+                </div>
+
+                <div class="vault-section">
+                    <h3>Transaction History</h3>
+                    <div class="transactions-list" id="fullTransactionsList"></div>
+                </div>
+            </div>
+
+            <!-- Inputs Dashboard -->
+            <div id="inputsDashboard" class="dashboard">
+                <div class="section-header">
+                    <h2><i class="fas fa-seedling"></i> Agricultural Inputs</h2>
+                    <div>
+                        <button class="btn btn-outline" onclick="filterInputs()" style="margin-right: 1rem;">
+                            <i class="fas fa-filter"></i> Filter
+                        </button>
+                        <button class="btn btn-primary" onclick="showBulkOrderModal()">
+                            <i class="fas fa-shopping-cart"></i> Bulk Order
+                        </button>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <input type="text" placeholder="Search inputs..." style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 15px; font-size: 1rem;">
+                </div>
+
+                <div class="products-grid" id="inputsGrid"></div>
+            </div>
+
+            <!-- Analytics Dashboard -->
+            <div id="analyticsDashboard" class="dashboard">
+                <div class="section-header">
+                    <h2><i class="fas fa-chart-line"></i> Farm Analytics</h2>
+                    <select class="form-control" style="width: auto; padding: 0.8rem;" onchange="changeAnalyticsPeriod(this.value)">
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="year">This Year</option>
+                    </select>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-label">Total Revenue</div>
+                        <div class="stat-value">KES 45,000</div>
+                        <div class="stat-trend"><i class="fas fa-arrow-up"></i> +15%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-label">Total Sales</div>
+                        <div class="stat-value">234 kg</div>
+                        <div class="stat-trend"><i class="fas fa-arrow-up"></i> +8%</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">⭐</div>
+                        <div class="stat-label">Avg Rating</div>
+                        <div class="stat-value">4.8</div>
+                        <div class="stat-trend">Excellent</div>
+                    </div>
+                </div>
+
+                <div class="vault-section">
+                    <h3>Performance Chart</h3>
+                    <div style="height: 300px; background: var(--light); border-radius: 15px; display: flex; align-items: center; justify-content: center;">
+                        <canvas id="performanceChart" style="width: 100%; height: 100%;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating Action Button -->
+        <div class="fab">
+            <i class="fas fa-plus"></i>
+            <div class="fab-menu">
+                <div class="fab-item" onclick="quickDeposit()">
+                    <i class="fas fa-money-bill"></i> Quick Deposit
+                </div>
+                <div class="fab-item" onclick="quickList()">
+                    <i class="fas fa-tag"></i> Quick List
+                </div>
+                <div class="fab-item" onclick="quickOrder()">
+                    <i class="fas fa-shopping-bag"></i> Quick Order
+                </div>
+                <div class="fab-item" onclick="getHelp()">
+                    <i class="fas fa-headset"></i> Get Help
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Deposit Modal -->
+    <div id="depositModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2><i class="fas fa-money-bill-wave"></i> Add Money to Vault</h2>
+                <span class="close-btn" onclick="closeModal('depositModal')" style="font-size: 2rem; cursor: pointer;">&times;</span>
+            </div>
+            <form id="depositForm" onsubmit="handleDeposit(event)">
+                <div class="form-group">
+                    <label>Amount (KES)</label>
+                    <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                        <button type="button" class="btn btn-outline" onclick="setAmount(500)">KES 500</button>
+                        <button type="button" class="btn btn-outline" onclick="setAmount(1000)">KES 1,000</button>
+                        <button type="button" class="btn btn-outline" onclick="setAmount(5000)">KES 5,000</button>
+                        <button type="button" class="btn btn-outline" onclick="setAmount(10000)">KES 10,000</button>
+                    </div>
+                    <input type="number" class="form-control" id="depositAmount" min="100" placeholder="Enter amount" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                </div>
+                <div class="form-group">
+                    <label>Payment Method</label>
+                    <select class="form-control" id="paymentMethod" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                        <option value="">Select payment method</option>
+                        <option value="mpesa">M-PESA</option>
+                        <option value="airtel">Airtel Money</option>
+                        <option value="bank">Bank Transfer</option>
+                        <option value="card">Debit/Credit Card</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" class="form-control" id="phoneNumber" placeholder="07XX XXX XXX" value="0712345678" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="width: 100%; padding: 1rem;">
+                    <i class="fas fa-lock"></i> Proceed to Payment
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Goal Modal -->
+    <div id="goalModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2><i class="fas fa-bullseye"></i> Create Savings Goal</h2>
+                <span class="close-btn" onclick="closeModal('goalModal')" style="font-size: 2rem; cursor: pointer;">&times;</span>
+            </div>
+            <form id="goalForm" onsubmit="handleCreateGoal(event)">
+                <div class="form-group">
+                    <label>Goal Name</label>
+                    <input type="text" class="form-control" id="goalName" placeholder="e.g., Seeds for next season" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                </div>
+                <div class="form-group">
+                    <label>Target Amount (KES)</label>
+                    <input type="number" class="form-control" id="goalTarget" min="1000" placeholder="Enter target amount" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                </div>
+                <div class="form-group">
+                    <label>Crop Season</label>
+                    <select class="form-control" id="goalSeason" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                        <option value="long-rains-2024">Long Rains 2024</option>
+                        <option value="short-rains-2024">Short Rains 2024</option>
+                        <option value="long-rains-2025">Long Rains 2025</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Goal Icon</label>
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <span onclick="selectIcon('🌱')" style="font-size: 2rem; cursor: pointer; padding: 0.5rem; border: 2px solid transparent; border-radius: 10px;">🌱</span>
+                        <span onclick="selectIcon('🌽')" style="font-size: 2rem; cursor: pointer; padding: 0.5rem; border: 2px solid transparent; border-radius: 10px;">🌽</span>
+                        <span onclick="selectIcon('🚜')" style="font-size: 2rem; cursor: pointer; padding: 0.5rem; border: 2px solid transparent; border-radius: 10px;">🚜</span>
+                        <span onclick="selectIcon('💧')" style="font-size: 2rem; cursor: pointer; padding: 0.5rem; border: 2px solid transparent; border-radius: 10px;">💧</span>
+                        <span onclick="selectIcon('🧪')" style="font-size: 2rem; cursor: pointer; padding: 0.5rem; border: 2px solid transparent; border-radius: 10px;">🧪</span>
+                    </div>
+                    <input type="hidden" id="goalIcon" value="🌱">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="width: 100%; padding: 1rem;">
+                    <i class="fas fa-check"></i> Create Goal
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Listing Modal -->
+    <div id="listingModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2><i class="fas fa-tag"></i> List Your Produce</h2>
+                <span class="close-btn" onclick="closeModal('listingModal')" style="font-size: 2rem; cursor: pointer;">&times;</span>
+            </div>
+            <form id="listingForm" onsubmit="handleCreateListing(event)">
+                <div class="form-group">
+                    <label>Crop Type</label>
+                    <select class="form-control" id="cropType" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                        <option value="">Select crop</option>
+                        <option value="maize">🌽 Maize</option>
+                        <option value="beans">🫘 Beans</option>
+                        <option value="potatoes">🥔 Potatoes</option>
+                        <option value="coffee">☕ Coffee</option>
+                        <option value="tea">🍃 Tea</option>
+                        <option value="tomatoes">🍅 Tomatoes</option>
+                        <option value="onions">🧅 Onions</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Quantity (kg)</label>
+                    <input type="number" class="form-control" id="quantity" min="1" placeholder="Enter quantity" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                </div>
+                <div class="form-group">
+                    <label>Price per kg (KES)</label>
+                    <input type="number" class="form-control" id="price" min="1" placeholder="Enter price" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                </div>
+                <div class="form-group">
+                    <label>Quality Grade</label>
+                    <select class="form-control" id="quality" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                        <option value="premium">⭐ Premium</option>
+                        <option value="grade-a">🌟 Grade A</option>
+                        <option value="grade-b">✨ Grade B</option>
+                        <option value="standard">📦 Standard</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Harvest Date</label>
+                    <input type="date" class="form-control" id="harvestDate" required style="width: 100%; padding: 1rem; border: 2px solid var(--light); border-radius: 10px;">
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="width: 100%; padding: 1rem;">
+                    <i class="fas fa-cloud-upload-alt"></i> List Produce
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <script>
-        // Initialize the map
-        const map = L.map('ocean-map').setView([20, 0], 2);
-        
-        // Add NASA's Blue Marble layer
-        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-            attribution: 'NASA, Esri'
-        }).addTo(map);
-        
-        // Add ocean data points
-        const oceanData = [
-            {lat: 25, lng: -170, name: "North Pacific", temp: "18.2°C", health: "Moderate"},
-            {lat: 0, lng: -150, name: "Equatorial Pacific", temp: "27.5°C", health: "Good"},
-            {lat: -30, lng: -50, name: "South Atlantic", temp: "16.8°C", health: "Good"},
-            {lat: 45, lng: -45, name: "North Atlantic", temp: "12.3°C", health: "Moderate"},
-            {lat: -10, lng: 70, name: "Indian Ocean", temp: "26.1°C", health: "Good"},
-            {lat: 75, lng: -10, name: "Arctic Ocean", temp: "-1.5°C", health: "Poor"}
-        ];
-        
-        oceanData.forEach(point => {
-            const color = point.health === "Good" ? "green" : point.health === "Moderate" ? "orange" : "red";
-            const marker = L.circleMarker([point.lat, point.lng], {
-                color: color,
-                fillColor: color,
-                fillOpacity: 0.7,
-                radius: 8
-            }).addTo(map);
+        // State Management
+        let appState = {
+            user: {
+                id: 'farmer123',
+                name: 'John Mwangi',
+                type: 'farmer',
+                phone: '+254712345678',
+                location: 'Nakuru',
+                avatar: 'JM'
+            },
+            vault: {
+                balance: 12500,
+                lockedBalance: 8000,
+                goals: [
+                    {
+                        id: 'g1',
+                        name: 'Seeds - Next Season',
+                        target: 50000,
+                        saved: 35000,
+                        season: 'long-rains-2024',
+                        icon: '🌱',
+                        progress: 70
+                    },
+                    {
+                        id: 'g2',
+                        name: 'Fertilizer Fund',
+                        target: 30000,
+                        saved: 15000,
+                        season: 'short-rains-2024',
+                        icon: '🧪',
+                        progress: 50
+                    },
+                    {
+                        id: 'g3',
+                        name: 'New Equipment',
+                        target: 100000,
+                        saved: 25000,
+                        season: 'long-rains-2025',
+                        icon: '🚜',
+                        progress: 25
+                    }
+                ],
+                drafts: [
+                    {
+                        id: 'd1',
+                        name: 'DAP Fertilizer',
+                        amount: 15000,
+                        supplier: 'AgroKing Ltd',
+                        status: 'active',
+                        date: '2024-01-15'
+                    },
+                    {
+                        id: 'd2',
+                        name: 'Hybrid Seeds',
+                        amount: 8000,
+                        supplier: 'SeedCo',
+                        status: 'pending',
+                        date: '2024-01-16'
+                    }
+                ],
+                transactions: [
+                    { id: 't1', type: 'deposit', amount: 2000, date: '2024-01-15', status: 'completed', description: 'M-PESA deposit', icon: '📱' },
+                    { id: 't2', type: 'withdrawal', amount: -1500, date: '2024-01-14', status: 'completed', description: 'Input purchase - Fertilizer', icon: '🧪' },
+                    { id: 't3', type: 'deposit', amount: 5000, date: '2024-01-13', status: 'completed', description: 'Harvest sale - Maize', icon: '🌽' },
+                    { id: 't4', type: 'draft', amount: -2000, date: '2024-01-12', status: 'completed', description: 'Savings draft created', icon: '📝' },
+                    { id: 't5', type: 'interest', amount: 150, date: '2024-01-11', status: 'completed', description: 'Interest earned', icon: '💰' }
+                ]
+            },
+            marketplace: {
+                sellListings: [
+                    {
+                        id: 'l1',
+                        farmer: 'John Mwangi',
+                        crop: 'Maize',
+                        quantity: 500,
+                        price: 45,
+                        quality: 'Grade A',
+                        location: 'Nakuru',
+                        image: '🌽',
+                        rating: 4.8,
+                        orders: 12
+                    },
+                    {
+                        id: 'l2',
+                        farmer: 'Jane Wanjiku',
+                        crop: 'Beans',
+                        quantity: 200,
+                        price: 85,
+                        quality: 'Premium',
+                        location: 'Eldoret',
+                        image: '🫘',
+                        rating: 4.9,
+                        orders: 8
+                    },
+                    {
+                        id: 'l3',
+                        farmer: 'Peter Kimani',
+                        crop: 'Potatoes',
+                        quantity: 1000,
+                        price: 35,
+                        quality: 'Grade A',
+                        location: 'Nyahururu',
+                        image: '🥔',
+                        rating: 4.7,
+                        orders: 15
+                    }
+                ],
+                buyListings: [
+                    {
+                        id: 'b1',
+                        supplier: 'AgroKing Ltd',
+                        product: 'Hybrid Maize Seeds',
+                        price: 350,
+                        unit: 'kg',
+                        quantity: 1000,
+                        rating: 4.5,
+                        image: '🌱',
+                        discount: 10,
+                        verified: true
+                    },
+                    {
+                        id: 'b2',
+                        supplier: 'Farmers Choice',
+                        product: 'DAP Fertilizer',
+                        price: 2800,
+                        unit: 'bag',
+                        quantity: 500,
+                        rating: 4.8,
+                        image: '🧪',
+                        discount: 5,
+                        verified: true
+                    },
+                    {
+                        id: 'b3',
+                        supplier: 'GreenGro',
+                        product: 'Organic Pesticide',
+                        price: 1200,
+                        unit: 'litre',
+                        quantity: 300,
+                        rating: 4.3,
+                        image: '🌿',
+                        discount: 0,
+                        verified: false
+                    },
+                    {
+                        id: 'b4',
+                        supplier: 'HarvestPlus',
+                        product: 'Tomato Seeds',
+                        price: 450,
+                        unit: 'pack',
+                        quantity: 200,
+                        rating: 4.6,
+                        image: '🍅',
+                        discount: 15,
+                        verified: true
+                    }
+                ]
+            }
+        };
+
+        // Login handling
+        function handleLogin(event, userType) {
+            event.preventDefault();
             
-            marker.bindPopup(`
-                <strong>${point.name}</strong><br>
-                Temperature: ${point.temp}<br>
-                Health: ${point.health}<br>
-                <em>NASA Satellite Data</em>
-            `);
-        });
-        
-        // Tab functionality
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                // Remove active class from all tabs and contents
-                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            // Show loading animation
+            const btn = event.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+            
+            setTimeout(() => {
+                document.getElementById('loginPage').style.display = 'none';
+                document.getElementById('mainApp').classList.add('active');
                 
-                // Add active class to clicked tab and corresponding content
-                tab.classList.add('active');
-                document.getElementById(`${tab.dataset.tab}-content`).classList.add('active');
-            });
-        });
-        
-        // Quiz functionality
-        document.querySelectorAll('.option').forEach(option => {
-            option.addEventListener('click', function() {
-                if (this.classList.contains('correct')) {
-                    this.style.background = 'var(--success)';
+                // Update user info based on type
+                if (userType === 'farmer') {
+                    appState.user.name = 'John Mwangi';
+                    appState.user.avatar = 'JM';
+                    document.getElementById('userName').textContent = 'John Mwangi';
+                    document.getElementById('userAvatar').textContent = 'JM';
+                } else if (userType === 'buyer') {
+                    appState.user.name = 'Sarah Odhiambo';
+                    appState.user.avatar = 'SO';
+                    document.getElementById('userName').textContent = 'Sarah Odhiambo';
+                    document.getElementById('userAvatar').textContent = 'SO';
                 } else {
-                    this.style.background = 'var(--danger)';
-                    // Highlight correct answer
-                    this.parentElement.querySelector('.correct').style.background = 'var(--success)';
+                    appState.user.name = 'David Kamau';
+                    appState.user.avatar = 'DK';
+                    document.getElementById('userName').textContent = 'David Kamau';
+                    document.getElementById('userAvatar').textContent = 'DK';
                 }
                 
-                // Disable further clicks
-                this.parentElement.querySelectorAll('.option').forEach(opt => {
-                    opt.style.pointerEvents = 'none';
-                });
+                showToast('success', `Welcome back, ${appState.user.name}! 👋`);
+                updateDashboard();
+                loadGoals();
+                loadTransactions();
+                loadMarketplaceListings();
+                loadInputs();
+                updateGreeting();
+            }, 1500);
+        }
+
+        function switchLoginTab(tab) {
+            document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.login-form').forEach(f => f.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + 'Login').classList.add('active');
+        }
+
+        function logout() {
+            document.getElementById('mainApp').classList.remove('active');
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('userMenu').style.display = 'none';
+            showToast('info', 'Logged out successfully');
+        }
+
+        // Dashboard navigation
+        function showDashboard(dashboardId) {
+            document.querySelectorAll('.dashboard').forEach(d => d.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            
+            document.getElementById(dashboardId + 'Dashboard').classList.add('active');
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // Update content based on dashboard
+            if (dashboardId === 'vault') {
+                updateVaultDashboard();
+            } else if (dashboardId === 'analytics') {
+                initChart();
+            }
+        }
+
+        // Update functions
+        function updateDashboard() {
+            document.getElementById('vaultBalance').textContent = `KES ${appState.vault.balance.toLocaleString()}`;
+            document.getElementById('statVaultBalance').textContent = `KES ${appState.vault.balance.toLocaleString()}`;
+            document.getElementById('activeListings').textContent = appState.marketplace.sellListings.length;
+        }
+
+        function updateGreeting() {
+            const hour = new Date().getHours();
+            let greeting = '';
+            if (hour < 12) greeting = 'Good morning';
+            else if (hour < 17) greeting = 'Good afternoon';
+            else greeting = 'Good evening';
+            
+            document.getElementById('greetingMessage').textContent = `${greeting}, ${appState.user.name}! 🌞`;
+        }
+
+        function loadGoals() {
+            const goalsContainer = document.getElementById('goalsContainer');
+            if (!goalsContainer) return;
+            
+            goalsContainer.innerHTML = appState.vault.goals.map(goal => {
+                const progress = (goal.saved / goal.target) * 100;
+                return `
+                    <div class="goal-card" onclick="viewGoalDetails('${goal.id}')">
+                        <div style="font-size: 2.5rem; margin-bottom: 1rem;">${goal.icon}</div>
+                        <h3 style="font-size: 1.3rem; margin-bottom: 0.5rem;">${goal.name}</h3>
+                        <div style="color: var(--gray); font-size: 0.9rem; margin-bottom: 1rem;">
+                            <i class="far fa-calendar"></i> ${goal.season.replace('-', ' ')}
+                        </div>
+                        <div class="goal-progress">
+                            <div class="progress-bar" style="width: ${progress}%"></div>
+                        </div>
+                        <div class="goal-amount" style="display: flex; justify-content: space-between; margin: 1rem 0;">
+                            <span><strong>KES ${goal.saved.toLocaleString()}</strong> saved</span>
+                            <span>of KES ${goal.target.toLocaleString()}</span>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-primary" style="flex: 1;" onclick="event.stopPropagation(); addToGoal('${goal.id}')">
+                                <i class="fas fa-plus"></i> Add
+                            </button>
+                            <button class="btn btn-outline" style="flex: 1;" onclick="event.stopPropagation(); shareGoal('${goal.id}')">
+                                <i class="fas fa-share"></i> Share
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadTransactions() {
+            const transactionsList = document.getElementById('transactionsList');
+            if (!transactionsList) return;
+            
+            transactionsList.innerHTML = appState.vault.transactions.slice(0, 5).map(t => `
+                <div class="transaction-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid var(--light); transition: all 0.3s; cursor: pointer;" onclick="viewTransactionDetails('${t.id}')">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <div style="font-size: 2rem;">${t.icon || '💰'}</div>
+                        <div>
+                            <h4 style="margin-bottom: 0.3rem;">${t.description}</h4>
+                            <p style="color: var(--gray); font-size: 0.9rem;">
+                                <i class="far fa-clock"></i> ${t.date}
+                            </p>
+                        </div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div class="transaction-amount ${t.amount > 0 ? 'positive' : 'negative'}" 
+                             style="font-size: 1.2rem; font-weight: bold; color: ${t.amount > 0 ? 'var(--success)' : 'var(--danger)'};">
+                            ${t.amount > 0 ? '+' : ''}KES ${Math.abs(t.amount).toLocaleString()}
+                        </div>
+                        <span style="font-size: 0.8rem; color: var(--gray);">${t.status}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadMarketplaceListings() {
+            const sellProducts = document.getElementById('sellProducts');
+            if (sellProducts) {
+                sellProducts.innerHTML = appState.marketplace.sellListings.map(listing => `
+                    <div class="product-card" onclick="viewListingDetails('${listing.id}')">
+                        <span class="product-badge">⭐ ${listing.rating}</span>
+                        <div class="product-image">${listing.image}</div>
+                        <div class="product-details">
+                            <div class="product-title">${listing.crop}</div>
+                            <div class="product-meta" style="display: flex; gap: 0.5rem; color: var(--gray);">
+                                <span><i class="fas fa-map-marker-alt"></i> ${listing.location}</span>
+                                <span><i class="fas fa-shopping-bag"></i> ${listing.orders} sold</span>
+                            </div>
+                            <div class="product-price">KES ${listing.price}/kg</div>
+                            <div style="margin: 0.5rem 0;">
+                                <span class="badge" style="background: var(--light); padding: 0.3rem 1rem; border-radius: 20px;">
+                                    ${listing.quality}
+                                </span>
+                                <span class="badge" style="background: var(--light); padding: 0.3rem 1rem; border-radius: 20px;">
+                                    ${listing.quantity} kg
+                                </span>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="event.stopPropagation(); buyProduce('${listing.id}')">
+                                <i class="fas fa-shopping-cart"></i> Buy Now
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            const buyProducts = document.getElementById('buyProducts');
+            if (buyProducts) {
+                buyProducts.innerHTML = appState.marketplace.buyListings.map(product => `
+                    <div class="product-card" onclick="viewProductDetails('${product.id}')">
+                        ${product.discount > 0 ? `<span class="product-badge" style="background: var(--danger);">-${product.discount}%</span>` : ''}
+                        ${product.verified ? '<span class="product-badge" style="background: var(--success); right: auto; left: 1rem;">✓ Verified</span>' : ''}
+                        <div class="product-image">${product.image}</div>
+                        <div class="product-details">
+                            <div class="product-title">${product.product}</div>
+                            <div class="product-meta" style="display: flex; gap: 0.5rem; color: var(--gray);">
+                                <span><i class="fas fa-store"></i> ${product.supplier}</span>
+                                <span><i class="fas fa-star" style="color: gold;"></i> ${product.rating}</span>
+                            </div>
+                            <div class="product-price">
+                                KES ${product.price}
+                                <span style="font-size: 0.9rem; color: var(--gray);">/${product.unit}</span>
+                            </div>
+                            <div style="margin: 0.5rem 0;">
+                                <span class="badge" style="background: var(--light); padding: 0.3rem 1rem; border-radius: 20px;">
+                                    <i class="fas fa-box"></i> ${product.quantity} available
+                                </span>
+                            </div>
+                            <button class="btn btn-primary btn-block" onclick="event.stopPropagation(); purchaseInput('${product.id}')">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function loadInputs() {
+            const inputsGrid = document.getElementById('inputsGrid');
+            if (!inputsGrid) return;
+            
+            inputsGrid.innerHTML = appState.marketplace.buyListings.map(product => `
+                <div class="product-card">
+                    <span class="product-badge">⭐ ${product.rating}</span>
+                    <div class="product-image">${product.image}</div>
+                    <div class="product-details">
+                        <div class="product-title">${product.product}</div>
+                        <div class="product-meta" style="color: var(--gray);">${product.supplier}</div>
+                        <div class="product-price">KES ${product.price}/${product.unit}</div>
+                        <div style="margin: 0.5rem 0;">
+                            <span class="badge" style="background: var(--light);">In Stock: ${product.quantity}</span>
+                        </div>
+                        <button class="btn btn-primary btn-block" onclick="purchaseInput('${product.id}')">
+                            <i class="fas fa-shopping-cart"></i> Purchase
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function updateVaultDashboard() {
+            document.getElementById('vaultTotalBalance').textContent = `KES ${appState.vault.balance.toLocaleString()}`;
+            document.getElementById('lockedBalance').textContent = `KES ${appState.vault.lockedBalance.toLocaleString()}`;
+            document.getElementById('availableBalance').textContent = `KES ${(appState.vault.balance - appState.vault.lockedBalance).toLocaleString()}`;
+            
+            const draftsContainer = document.getElementById('draftsContainer');
+            if (draftsContainer) {
+                draftsContainer.innerHTML = appState.vault.drafts.map(draft => `
+                    <div class="goal-card">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
+                        <h3>${draft.name}</h3>
+                        <p style="color: var(--gray);"><i class="fas fa-store"></i> ${draft.supplier}</p>
+                        <div class="goal-amount" style="margin: 1rem 0;">
+                            <span style="font-size: 1.5rem; font-weight: bold;">KES ${draft.amount.toLocaleString()}</span>
+                        </div>
+                        <span class="badge" style="background: ${draft.status === 'active' ? 'var(--success)' : 'var(--warning)'}; color: white; padding: 0.3rem 1rem;">
+                            ${draft.status}
+                        </span>
+                        <button class="btn btn-primary" style="margin-top: 1rem; width: 100%;" onclick="convertDraftToPurchase('${draft.id}')">
+                            Convert to Purchase
+                        </button>
+                    </div>
+                `).join('');
+            }
+            
+            const fullTransactionsList = document.getElementById('fullTransactionsList');
+            if (fullTransactionsList) {
+                fullTransactionsList.innerHTML = appState.vault.transactions.map(t => `
+                    <div class="transaction-item" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid var(--light);">
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <div style="font-size: 2rem;">${t.icon || '💰'}</div>
+                            <div>
+                                <h4>${t.description}</h4>
+                                <p style="color: var(--gray);"><i class="far fa-clock"></i> ${t.date}</p>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-size: 1.2rem; font-weight: bold; color: ${t.amount > 0 ? 'var(--success)' : 'var(--danger)'};">
+                                ${t.amount > 0 ? '+' : ''}KES ${Math.abs(t.amount).toLocaleString()}
+                            </div>
+                            <span style="color: var(--gray);">${t.status}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Modal functions
+        function showDepositModal() {
+            document.getElementById('depositModal').classList.add('active');
+        }
+
+        function showGoalModal() {
+            document.getElementById('goalModal').classList.add('active');
+        }
+
+        function showListingModal() {
+            document.getElementById('listingModal').classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('active');
+        }
+
+        function setAmount(amount) {
+            document.getElementById('depositAmount').value = amount;
+        }
+
+        function selectIcon(icon) {
+            document.querySelectorAll('[onclick^="selectIcon"]').forEach(el => {
+                el.style.borderColor = 'transparent';
             });
-        });
-        
-        // Game functionality
-        document.querySelectorAll('.game-actions button').forEach(button => {
-            button.addEventListener('click', function() {
-                const action = this.textContent;
-                alert(`Performing: ${action}\nThis would trigger game mechanics in a full implementation.`);
-            });
-        });
-        
-        // Apply filters button
-        document.querySelector('.apply-filters').addEventListener('click', function() {
-            this.textContent = 'Applying NASA Filters...';
+            event.target.style.borderColor = 'var(--primary)';
+            document.getElementById('goalIcon').value = icon;
+        }
+
+        // Form handlers
+        function handleDeposit(event) {
+            event.preventDefault();
+            
+            const amount = parseFloat(document.getElementById('depositAmount').value);
+            const method = document.getElementById('paymentMethod').value;
+            const phone = document.getElementById('phoneNumber').value;
+            
+            // Validate
+            if (!phone.match(/^0[17]\d{8}$/)) {
+                showToast('error', 'Please enter a valid phone number');
+                return;
+            }
+            
+            // Show loading
+            const btn = event.target.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            
             setTimeout(() => {
-                this.textContent = 'Filters Applied!';
-                setTimeout(() => {
-                    this.textContent = 'Apply Filters';
-                }, 1500);
-            }, 1000);
+                // Simulate deposit
+                appState.vault.balance += amount;
+                appState.vault.transactions.unshift({
+                    id: 't' + Date.now(),
+                    type: 'deposit',
+                    amount: amount,
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'completed',
+                    description: `M-PESA deposit of KES ${amount}`,
+                    icon: '📱'
+                });
+                
+                updateDashboard();
+                showToast('success', `Successfully deposited KES ${amount} to your vault`);
+                closeModal('depositModal');
+                btn.innerHTML = originalText;
+                event.target.reset();
+            }, 2000);
+        }
+
+        function handleCreateGoal(event) {
+            event.preventDefault();
+            
+            const goalName = document.getElementById('goalName').value;
+            const target = parseFloat(document.getElementById('goalTarget').value);
+            const season = document.getElementById('goalSeason').value;
+            const icon = document.getElementById('goalIcon').value;
+            
+            const newGoal = {
+                id: 'g' + Date.now(),
+                name: goalName,
+                target: target,
+                saved: 0,
+                season: season,
+                icon: icon,
+                progress: 0
+            };
+            
+            appState.vault.goals.push(newGoal);
+            loadGoals();
+            showToast('success', '🎯 Savings goal created successfully!');
+            closeModal('goalModal');
+            event.target.reset();
+        }
+
+        function handleCreateListing(event) {
+            event.preventDefault();
+            
+            const crop = document.getElementById('cropType').value;
+            const quantity = parseFloat(document.getElementById('quantity').value);
+            const price = parseFloat(document.getElementById('price').value);
+            const quality = document.getElementById('quality').value;
+            const harvestDate = document.getElementById('harvestDate').value;
+            
+            const newListing = {
+                id: 'l' + Date.now(),
+                farmer: appState.user.name,
+                crop: crop,
+                quantity: quantity,
+                price: price,
+                quality: quality,
+                location: appState.user.location,
+                image: getCropEmoji(crop),
+                rating: 5.0,
+                orders: 0,
+                harvestDate: harvestDate
+            };
+            
+            appState.marketplace.sellListings.unshift(newListing);
+            loadMarketplaceListings();
+            showToast('success', 'Your produce has been listed successfully!');
+            closeModal('listingModal');
+            event.target.reset();
+        }
+
+        function getCropEmoji(crop) {
+            const emojis = {
+                'maize': '🌽',
+                'beans': '🫘',
+                'potatoes': '🥔',
+                'coffee': '☕',
+                'tea': '🍃',
+                'tomatoes': '🍅',
+                'onions': '🧅'
+            };
+            return emojis[crop] || '🌱';
+        }
+
+        // Action functions
+        function addToGoal(goalId) {
+            const goal = appState.vault.goals.find(g => g.id === goalId);
+            const amount = prompt(`Enter amount to add to ${goal.name}:`, '1000');
+            
+            if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                const depositAmount = parseFloat(amount);
+                
+                if (depositAmount <= appState.vault.balance) {
+                    goal.saved += depositAmount;
+                    appState.vault.balance -= depositAmount;
+                    appState.vault.lockedBalance += depositAmount;
+                    
+                    appState.vault.transactions.unshift({
+                        id: 't' + Date.now(),
+                        type: 'goal',
+                        amount: -depositAmount,
+                        date: new Date().toISOString().split('T')[0],
+                        status: 'completed',
+                        description: `Added to goal: ${goal.name}`,
+                        icon: '🎯'
+                    });
+                    
+                    updateDashboard();
+                    loadGoals();
+                    showToast('success', `✨ Added KES ${depositAmount} to ${goal.name}`);
+                } else {
+                    showToast('error', 'Insufficient vault balance');
+                }
+            }
+        }
+
+        function convertToDraft() {
+            const amount = prompt('Enter amount for savings draft:', '5000');
+            
+            if (amount && !isNaN(amount) && parseFloat(amount) > 0) {
+                const draftAmount = parseFloat(amount);
+                
+                if (draftAmount <= appState.vault.balance) {
+                    const draft = {
+                        id: 'd' + Date.now(),
+                        name: 'Input Purchase Draft',
+                        amount: draftAmount,
+                        supplier: 'Select supplier',
+                        status: 'pending',
+                        date: new Date().toISOString().split('T')[0]
+                    };
+                    
+                    appState.vault.drafts.push(draft);
+                    appState.vault.balance -= draftAmount;
+                    appState.vault.lockedBalance += draftAmount;
+                    
+                    appState.vault.transactions.unshift({
+                        id: 't' + Date.now(),
+                        type: 'draft',
+                        amount: -draftAmount,
+                        date: new Date().toISOString().split('T')[0],
+                        status: 'completed',
+                        description: `Savings draft created for KES ${draftAmount}`,
+                        icon: '📝'
+                    });
+                    
+                    updateDashboard();
+                    showToast('success', `📝 Savings draft of KES ${draftAmount} created`);
+                } else {
+                    showToast('error', 'Insufficient vault balance');
+                }
+            }
+        }
+
+        function convertDraftToPurchase(draftId) {
+            const draft = appState.vault.drafts.find(d => d.id === draftId);
+            
+            if (confirm(`Convert draft of KES ${draft.amount} to purchase inputs?`)) {
+                appState.vault.drafts = appState.vault.drafts.filter(d => d.id !== draftId);
+                appState.vault.lockedBalance -= draft.amount;
+                
+                appState.vault.transactions.unshift({
+                    id: 't' + Date.now(),
+                    type: 'purchase',
+                    amount: -draft.amount,
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'completed',
+                    description: 'Input purchase using savings draft',
+                    icon: '🛒'
+                });
+                
+                updateVaultDashboard();
+                showToast('success', '✅ Draft converted to purchase successfully!');
+            }
+        }
+
+        function buyProduce(listingId) {
+            const listing = appState.marketplace.sellListings.find(l => l.id === listingId);
+            
+            if (confirm(`Buy ${listing.quantity}kg of ${listing.crop} for KES ${listing.price * listing.quantity}?`)) {
+                appState.marketplace.sellListings = appState.marketplace.sellListings.filter(l => l.id !== listingId);
+                
+                appState.vault.transactions.unshift({
+                    id: 't' + Date.now(),
+                    type: 'sale',
+                    amount: listing.price * listing.quantity,
+                    date: new Date().toISOString().split('T')[0],
+                    status: 'completed',
+                    description: `Sold ${listing.quantity}kg ${listing.crop}`,
+                    icon: '💰'
+                });
+                
+                appState.vault.balance += listing.price * listing.quantity;
+                
+                loadMarketplaceListings();
+                updateDashboard();
+                showToast('success', '🎉 Sale completed successfully!');
+            }
+        }
+
+        function purchaseInput(productId) {
+            const product = appState.marketplace.buyListings.find(p => p.id === productId);
+            const quantity = prompt(`Enter quantity (${product.unit}s) to purchase:`, '1');
+            
+            if (quantity && !isNaN(quantity) && parseFloat(quantity) > 0) {
+                const totalCost = product.price * parseFloat(quantity);
+                
+                if (totalCost <= appState.vault.balance) {
+                    appState.vault.balance -= totalCost;
+                    
+                    appState.vault.transactions.unshift({
+                        id: 't' + Date.now(),
+                        type: 'purchase',
+                        amount: -totalCost,
+                        date: new Date().toISOString().split('T')[0],
+                        status: 'completed',
+                        description: `Purchased ${quantity} ${product.unit}(s) of ${product.product}`,
+                        icon: '🛒'
+                    });
+                    
+                    updateDashboard();
+                    showToast('success', `✅ Purchased ${quantity} ${product.unit}(s) for KES ${totalCost}`);
+                } else {
+                    showToast('error', 'Insufficient vault balance');
+                }
+            }
+        }
+
+        // Toast notifications
+        function showToast(type, message) {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            let icon = '';
+            if (type === 'success') icon = '✅';
+            else if (type === 'error') icon = '❌';
+            else if (type === 'info') icon = 'ℹ️';
+            else if (type === 'warning') icon = '⚠️';
+            
+            toast.innerHTML = `
+                <div style="font-size: 1.5rem;">${icon}</div>
+                <div>${message}</div>
+                <div style="margin-left: auto; cursor: pointer;" onclick="this.parentElement.remove()">✕</div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.remove();
+            }, 5000);
+        }
+
+        // User menu
+        function toggleUserMenu() {
+            const menu = document.getElementById('userMenu');
+            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Quick actions
+        function quickDeposit() {
+            showDepositModal();
+        }
+
+        function quickList() {
+            showListingModal();
+        }
+
+        function quickOrder() {
+            showDashboard('marketplace');
+            switchMarketplaceTab('buy');
+        }
+
+        function getHelp() {
+            showToast('info', 'Customer support will contact you shortly');
+        }
+
+        // View functions
+        function viewGoalDetails(goalId) {
+            showToast('info', 'Opening goal details...');
+        }
+
+        function viewTransactionDetails(transactionId) {
+            showToast('info', 'Opening transaction details...');
+        }
+
+        function viewListingDetails(listingId) {
+            showToast('info', 'Opening listing details...');
+        }
+
+        function viewProductDetails(productId) {
+            showToast('info', 'Opening product details...');
+        }
+
+        function viewAllTransactions() {
+            showDashboard('vault');
+        }
+
+        function viewProfile() {
+            showToast('info', 'Opening profile...');
+        }
+
+        function viewSettings() {
+            showToast('info', 'Opening settings...');
+        }
+
+        function showWeatherDetails() {
+            showToast('info', '🌤️ 7-day forecast: Sunny with occasional rains');
+        }
+
+        function viewActiveListings() {
+            showDashboard('marketplace');
+        }
+
+        function viewVaultDetails() {
+            showDashboard('vault');
+        }
+
+        function viewOrders() {
+            showDashboard('marketplace');
+            switchMarketplaceTab('orders');
+        }
+
+        function viewSavingsGoals() {
+            showDashboard('vault');
+        }
+
+        function scheduleSavings() {
+            showToast('info', 'Auto-savings feature coming soon!');
+        }
+
+        function showTransferModal() {
+            showToast('info', 'Transfer feature coming soon!');
+        }
+
+        function showWithdrawModal() {
+            showToast('info', 'Withdrawal feature coming soon!');
+        }
+
+        function filterInputs() {
+            showToast('info', 'Filter feature coming soon!');
+        }
+
+        function showBulkOrderModal() {
+            showToast('info', 'Bulk ordering feature coming soon! Please contact sales');
+        }
+
+        function refreshInsights() {
+            showToast('success', 'Market insights refreshed');
+        }
+
+        function shareGoal(goalId) {
+            showToast('success', 'Link copied to clipboard!');
+        }
+
+        // Marketplace tabs
+        function switchMarketplaceTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.getElementById('sellTab').style.display = tab === 'sell' ? 'grid' : 'none';
+            document.getElementById('buyTab').style.display = tab === 'buy' ? 'grid' : 'none';
+            document.getElementById('ordersTab').style.display = tab === 'orders' ? 'block' : 'none';
+            
+            if (tab === 'orders') {
+                document.getElementById('ordersList').innerHTML = `
+                    <div style="text-align: center; padding: 3rem; color: var(--gray);">
+                        <i class="fas fa-box-open" style="font-size: 4rem; margin-bottom: 1rem;"></i>
+                        <h3>No orders yet</h3>
+                        <p>Your orders will appear here</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Chart
+        function initChart() {
+            // Simple chart placeholder
+            const canvas = document.getElementById('performanceChart');
+            if (canvas) {
+                const ctx = canvas.getContext('2d');
+                // Draw a simple chart
+                ctx.fillStyle = '#f5f9ff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                ctx.beginPath();
+                ctx.strokeStyle = 'var(--primary)';
+                ctx.lineWidth = 3;
+                ctx.moveTo(50, 200);
+                ctx.lineTo(150, 150);
+                ctx.lineTo(250, 180);
+                ctx.lineTo(350, 120);
+                ctx.lineTo(450, 140);
+                ctx.lineTo(550, 90);
+                ctx.stroke();
+            }
+        }
+
+        function changeAnalyticsPeriod(period) {
+            showToast('info', `Loading ${period} analytics...`);
+        }
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('active');
+            }
+            if (!event.target.closest('.user-profile')) {
+                document.getElementById('userMenu').style.display = 'none';
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateGreeting();
+            loadGoals();
+            loadTransactions();
+            loadMarketplaceListings();
+            loadInputs();
         });
     </script>
 </body>
